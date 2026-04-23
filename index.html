@@ -12,7 +12,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -21,27 +21,49 @@
         extend: {
           colors: {
             aura: {
+              950: '#05020a',
               900: '#0a0514',
+              850: '#0f081e',
               800: '#140e2b',
+              750: '#1a1238',
               700: '#1f1642',
+              650: '#251b4d',
               600: '#2a1e59',
+              550: '#312366',
               500: '#3b2a7d',
+              450: '#4a3699',
               400: '#5a42a8',
+              350: '#6d55c4',
               300: '#7d67d1',
+              250: '#917fe0',
               200: '#a394f0',
+              150: '#b8adf9',
               100: '#c9c4f9',
+              50: '#e6e1ff'
+            },
+            premium: {
+              glow: 'rgba(125, 103, 209, 0.6)',
+              border: 'rgba(163, 148, 240, 0.4)',
+              surface: 'rgba(30, 22, 54, 0.85)'
             }
           },
           animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'float': 'float 6s ease-in-out infinite',
-            'shine': 'shine 2s linear infinite',
-            'gradient-x': 'gradient-x 8s ease infinite alternate',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'pulse-medium': 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 8s ease-in-out infinite',
+            'float-slow': 'float 12s ease-in-out infinite',
+            'shine': 'shine 2.5s linear infinite',
+            'gradient-x': 'gradient-x 10s ease infinite alternate',
+            'gradient-xy': 'gradient-xy 15s ease infinite alternate',
+            'fade-in-up': 'fadeInUp 0.5s ease forwards',
+            'fade-in-scale': 'fadeInScale 0.4s ease forwards',
+            'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+            'audit-scan': 'auditScan 2s linear infinite',
           },
           keyframes: {
             float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' },
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(0.5deg)' },
             },
             shine: {
               '0%': { backgroundPosition: '-200% 0' },
@@ -50,7 +72,39 @@
             'gradient-x': {
               '0%': { backgroundPosition: '0% 50%' },
               '100%': { backgroundPosition: '100% 50%' },
+            },
+            'gradient-xy': {
+              '0%': { backgroundPosition: '0% 0%' },
+              '50%': { backgroundPosition: '100% 100%' },
+              '100%': { backgroundPosition: '0% 0%' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeInScale: {
+              '0%': { opacity: '0', transform: 'scale(0.98)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+            glowPulse: {
+              '0%, 100%': { boxShadow: '0 0 20px rgba(125, 103, 209, 0.4), 0 0 40px rgba(125, 103, 209, 0.2)' },
+              '50%': { boxShadow: '0 0 35px rgba(125, 103, 209, 0.7), 0 0 70px rgba(125, 103, 209, 0.35)' },
+            },
+            auditScan: {
+              '0%': { transform: 'translateX(-100%)', opacity: '0' },
+              '10%': { opacity: '1' },
+              '90%': { opacity: '1' },
+              '100%': { transform: 'translateX(100%)', opacity: '0' },
             }
+          },
+          backdropBlur: {
+            'xs': '2px',
+            'sm': '4px',
+            'DEFAULT': '12px',
+            'md': '16px',
+            'lg': '24px',
+            'xl': '32px',
+            '2xl': '48px',
           }
         }
       }
@@ -58,585 +112,1069 @@
   </script>
   
   <style>
-    /* ===== BASE STYLES ===== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ===== PREMIUM BASE STYLES ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     html, body { 
       height: 100%; 
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: radial-gradient(1200px 800px at 10% 10%, rgba(90, 66, 168, 0.15), transparent 40%),
-                  radial-gradient(1000px 700px at 90% 20%, rgba(125, 103, 209, 0.12), transparent 45%),
-                  radial-gradient(800px 600px at 50% 100%, rgba(59, 42, 125, 0.18), transparent 50%),
-                  #0a0514;
-      color: #e6e1ff;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: 
+        radial-gradient(1400px 900px at 15% 15%, rgba(90, 66, 168, 0.18), transparent 45%),
+        radial-gradient(1200px 800px at 85% 25%, rgba(125, 103, 209, 0.15), transparent 50%),
+        radial-gradient(1000px 700px at 50% 100%, rgba(59, 42, 125, 0.22), transparent 55%),
+        radial-gradient(800px 500px at 30% 80%, rgba(163, 148, 240, 0.08), transparent 60%),
+        #05020a;
+      color: #f0ebff;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(125, 103, 209, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80px 120px, rgba(163, 148, 240, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 150px 60px, rgba(90, 66, 168, 0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 220px 180px, rgba(74, 54, 153, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 300px 90px, rgba(125, 103, 209, 0.25) 0%, transparent 100%);
+      background-size: 400px 400px;
+      animation: gradient-xy 25s linear infinite;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* ===== PREMIUM GLASSMORPHISM ===== */
+    .glass {
+      background: linear-gradient(145deg, rgba(30, 22, 54, 0.75), rgba(20, 14, 43, 0.85));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(163, 148, 240, 0.35);
+      box-shadow: 
+        0 8px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(90, 66, 168, 0.15),
+        0 0 32px rgba(125, 103, 209, 0.12);
+      position: relative;
       overflow: hidden;
     }
     
-    /* ===== GLASSMORPHISM ===== */
-    .glass {
-      background: rgba(30, 22, 54, 0.65);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(125, 103, 209, 0.25);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.08),
-                  0 0 0 1px rgba(90, 66, 168, 0.1);
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(163, 148, 240, 0.6), transparent);
+      opacity: 0.7;
     }
     
     .glass-intense {
-      background: linear-gradient(135deg, rgba(42, 30, 89, 0.85), rgba(30, 22, 54, 0.92));
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border: 1px solid rgba(163, 148, 240, 0.35);
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.12),
-                  0 0 32px rgba(90, 66, 168, 0.25);
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.92), rgba(30, 22, 54, 0.96));
+      backdrop-filter: blur(36px);
+      -webkit-backdrop-filter: blur(36px);
+      border: 1px solid rgba(163, 148, 240, 0.5);
+      box-shadow: 
+        0 16px 64px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 0 1px rgba(90, 66, 168, 0.25),
+        0 0 48px rgba(125, 103, 209, 0.28),
+        0 0 96px rgba(90, 66, 168, 0.15);
+      position: relative;
     }
     
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    .glass-intense::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(163, 148, 240, 0.4), rgba(125, 103, 209, 0.2), transparent 40%, rgba(90, 66, 168, 0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
+    .glass-glow {
+      animation: glow-pulse 4s ease-in-out infinite;
+    }
+    
+    /* ===== PREMIUM SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { 
-      background: rgba(30, 22, 54, 0.5); 
-      border-radius: 4px; 
+      background: rgba(20, 14, 43, 0.6); 
+      border-radius: 6px; 
     }
     ::-webkit-scrollbar-thumb { 
-      background: linear-gradient(180deg, #5a42a8, #3b2a7d); 
-      border-radius: 4px;
+      background: linear-gradient(180deg, #5a42a8, #3b2a7d, #2a1e59); 
+      border-radius: 6px;
       border: 2px solid transparent;
       background-clip: padding-box;
+      box-shadow: inset 0 0 8px rgba(125, 103, 209, 0.4);
     }
     ::-webkit-scrollbar-thumb:hover { 
-      background: linear-gradient(180deg, #7d67d1, #5a42a8); 
+      background: linear-gradient(180deg, #7d67d1, #5a42a8, #3b2a7d);
+      box-shadow: inset 0 0 12px rgba(163, 148, 240, 0.5);
     }
     
-    /* ===== CODE PREVIEW STYLING ===== */
+    /* ===== PREMIUM CODE STYLING ===== */
     .code-block {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: #c9c4f9;
-      background: rgba(15, 10, 30, 0.85);
-      border-radius: 10px;
-      padding: 16px;
-      border: 1px solid rgba(90, 66, 168, 0.3);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #d4ccf5;
+      background: linear-gradient(145deg, rgba(15, 10, 30, 0.92), rgba(10, 5, 20, 0.96));
+      border-radius: 14px;
+      padding: 18px 20px;
+      border: 1px solid rgba(90, 66, 168, 0.45);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 4px 20px rgba(0, 0, 0, 0.3);
       overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-word;
+      position: relative;
     }
     
-    .code-keyword { color: #c792ea; font-weight: 500; }
+    .code-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(125, 103, 209, 0.5), transparent);
+    }
+    
+    .code-keyword { color: #c792ea; font-weight: 600; }
     .code-function { color: #82aaff; }
     .code-string { color: #c3e88d; }
     .code-comment { color: #6c7a99; font-style: italic; }
     .code-tag { color: #f07178; }
     .code-attr { color: #c792ea; }
     .code-value { color: #f78c6c; }
+    .code-number { color: #f78c6c; }
+    .code-operator { color: #89ddff; }
     
-    /* ===== PROGRESS ANIMATIONS ===== */
+    /* ===== PREMIUM PROGRESS ANIMATIONS ===== */
+    .progress-track {
+      background: linear-gradient(90deg, rgba(42, 30, 89, 0.8), rgba(30, 22, 54, 0.9));
+      border: 1px solid rgba(90, 66, 168, 0.4);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      height: 10px;
+    }
+    
     .progress-bar {
-      background: linear-gradient(90deg, #5a42a8, #7d67d1, #a394f0);
-      background-size: 300% 100%;
-      animation: gradient-x 3s ease infinite;
-      border-radius: 6px;
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(90deg, #5a42a8, #7d67d1, #a394f0, #c9c4f9);
+      background-size: 400% 100%;
+      animation: gradient-x 4s ease infinite;
+      border-radius: 8px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 20px rgba(125, 103, 209, 0.5);
     }
     
     .progress-bar::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      animation: shine 2s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: shine 2.5s infinite;
+      opacity: 0.8;
     }
     
-    /* ===== STAGE INDICATOR ===== */
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.08) 10px,
+        rgba(255, 255, 255, 0.08) 20px
+      );
+      animation: shine 3s linear infinite;
+    }
+    
+    /* ===== STAGE INDICATOR PREMIUM ===== */
+    .stage-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      position: relative;
+    }
+    
+    .stage-container::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 8%; right: 8%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(90, 66, 168, 0.6), rgba(125, 103, 209, 0.8), rgba(90, 66, 168, 0.6), transparent);
+      transform: translateY(-50%);
+      border-radius: 2px;
+    }
+    
     .stage-dot {
-      width: 14px; height: 14px;
+      width: 18px; height: 18px;
       border-radius: 50%;
-      background: rgba(90, 66, 168, 0.4);
-      border: 2px solid #5a42a8;
-      transition: all 0.3s ease;
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.9), rgba(30, 22, 54, 0.95));
+      border: 2.5px solid rgba(90, 66, 168, 0.7);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
+      z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     }
+    
+    .stage-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125, 103, 209, 0.4) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
     .stage-dot.active {
-      background: #7d67d1;
+      background: linear-gradient(145deg, #7d67d1, #5a42a8);
       border-color: #a394f0;
-      box-shadow: 0 0 0 4px rgba(125, 103, 209, 0.25);
-      transform: scale(1.15);
+      box-shadow: 
+        0 0 0 5px rgba(125, 103, 209, 0.25),
+        0 8px 32px rgba(125, 103, 209, 0.45);
+      transform: scale(1.25);
+      animation: glow-pulse 2.5s ease-in-out infinite;
     }
+    
+    .stage-dot.active::after { opacity: 1; }
+    
     .stage-dot.completed {
-      background: #00d4aa;
+      background: linear-gradient(145deg, #00d4aa, #00a885);
       border-color: #00f5c3;
-      box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.25);
+      box-shadow: 
+        0 0 0 5px rgba(0, 212, 170, 0.25),
+        0 8px 32px rgba(0, 212, 170, 0.35);
     }
     
-    /* ===== PREVIEW IFRAME STYLING ===== */
-    .preview-container {
-      background: linear-gradient(135deg, #0f0a1e 0%, #1a1233 50%, #0f0a1e 100%);
-      border-radius: 16px;
-      border: 1px solid rgba(125, 103, 209, 0.3);
-      overflow: hidden;
+    .stage-dot.completed::after {
+      background: radial-gradient(circle, rgba(0, 212, 170, 0.5) 0%, transparent 70%);
+      opacity: 1;
+    }
+    
+    .stage-label {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: #a394f0;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .stage-dot:hover .stage-label { opacity: 1; }
+    
+    /* ===== QUALITY AUDIT ANIMATION ===== */
+    .audit-scanner {
       position: relative;
+      overflow: hidden;
+      border-radius: 10px;
     }
     
-    .preview-frame {
+    .audit-scanner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, #00f5c3, #00d4aa, #00f5c3, transparent);
+      animation: audit-scan 2.2s linear infinite;
+      opacity: 0.9;
+      box-shadow: 0 0 12px rgba(0, 212, 170, 0.6);
+    }
+    
+    .audit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(0, 45, 38, 0.85), rgba(0, 30, 26, 0.92));
+      border: 1px solid rgba(0, 212, 170, 0.5);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #00f5c3;
+      animation: fadeInScale 0.4s ease forwards;
+    }
+    
+    .audit-badge i { animation: pulse-medium 2s infinite; }
+    
+    /* ===== ROADMAP TABLE PREMIUM ===== */
+    .roadmap-table {
       width: 100%;
-      height: 100%;
-      min-height: 500px;
-      border: none;
-      background: white;
-      border-radius: 12px;
-      margin: 8px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(90, 66, 168, 0.4);
+      background: rgba(15, 10, 30, 0.7);
     }
     
-    /* ===== CHAT MESSAGE STYLES ===== */
-    .message-user {
-      background: linear-gradient(135deg, rgba(90, 66, 168, 0.25), rgba(59, 42, 125, 0.35));
+    .roadmap-table th {
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.95), rgba(30, 22, 54, 0.98));
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #c9c4f9;
+      border-bottom: 1px solid rgba(125, 103, 209, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .roadmap-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(90, 66, 168, 0.2);
+      font-size: 0.85rem;
+      color: #d4ccf5;
+      transition: background 0.2s ease;
+    }
+    
+    .roadmap-table tr:last-child td { border-bottom: none; }
+    .roadmap-table tr:hover td { 
+      background: rgba(59, 42, 125, 0.4); 
       border-left: 3px solid #7d67d1;
-      animation: slideInRight 0.3s ease;
+      padding-left: 13px;
     }
+    
+    .roadmap-table .priority {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .priority-high { background: rgba(240, 113, 124, 0.2); color: #f78c6c; border: 1px solid rgba(240, 113, 124, 0.4); }
+    .priority-med { background: rgba(247, 140, 108, 0.2); color: #f78c6c; border: 1px solid rgba(247, 140, 108, 0.4); }
+    .priority-low { background: rgba(125, 103, 209, 0.25); color: #a394f0; border: 1px solid rgba(125, 103, 209, 0.4); }
+    
+    /* ===== CHAT MESSAGE PREMIUM ===== */
+    .message-user {
+      background: linear-gradient(145deg, rgba(59, 42, 125, 0.35), rgba(42, 30, 89, 0.45));
+      border-left: 4px solid #7d67d1;
+      border-radius: 18px 18px 6px 18px;
+      animation: fadeInUp 0.35s ease forwards;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    
     .message-ai {
-      background: rgba(30, 22, 54, 0.7);
-      border-left: 3px solid #00d4aa;
-      animation: slideInLeft 0.3s ease;
+      background: linear-gradient(145deg, rgba(30, 22, 54, 0.85), rgba(20, 14, 43, 0.92));
+      border-left: 4px solid #00d4aa;
+      border-radius: 18px 18px 18px 6px;
+      animation: fadeInUp 0.35s ease forwards;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      position: relative;
     }
     
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-20px); }
-      to { opacity: 1; transform: translateX(0); }
+    .message-ai::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.4), transparent);
     }
     
-    /* ===== BUTTON HOVER EFFECTS ===== */
+    /* ===== PREMIUM BUTTONS ===== */
     .btn-primary {
-      background: linear-gradient(135deg, #5a42a8, #7d67d1);
-      transition: all 0.25s ease;
+      background: linear-gradient(145deg, #5a42a8, #7d67d1, #6d55c4);
+      background-size: 200% 200%;
+      animation: gradient-xy 6s ease infinite;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(163, 148, 240, 0.5);
+      box-shadow: 
+        0 4px 20px rgba(125, 103, 209, 0.35),
+        0 0 0 1px rgba(90, 66, 168, 0.2);
     }
+    
     .btn-primary::before {
       content: '';
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.4s ease;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transition: left 0.5s ease;
     }
+    
     .btn-primary:hover::before { left: 100%; }
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(125, 103, 209, 0.45);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 12px 40px rgba(125, 103, 209, 0.55),
+        0 0 0 1px rgba(163, 148, 240, 0.4),
+        0 0 32px rgba(125, 103, 209, 0.4);
     }
+    
+    .btn-primary:active { transform: translateY(-1px) scale(1.01); }
     
     .btn-secondary {
-      background: rgba(90, 66, 168, 0.2);
-      border: 1px solid rgba(125, 103, 209, 0.4);
-      transition: all 0.2s ease;
-    }
-    .btn-secondary:hover {
-      background: rgba(90, 66, 168, 0.35);
-      border-color: #7d67d1;
-      transform: translateY(-1px);
+      background: rgba(42, 30, 89, 0.4);
+      border: 1px solid rgba(125, 103, 209, 0.45);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
     }
     
-    /* ===== LOADING DOTS ===== */
+    .btn-secondary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, transparent, rgba(125, 103, 209, 0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(59, 42, 125, 0.55);
+      border-color: #7d67d1;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+    
+    .btn-secondary:hover::after { opacity: 1; }
+    
+    /* ===== PREMIUM PREVIEW STYLING ===== */
+    .preview-container {
+      background: 
+        radial-gradient(800px 500px at 20% 30%, rgba(90, 66, 168, 0.12), transparent 40%),
+        radial-gradient(600px 400px at 80% 70%, rgba(125, 103, 209, 0.1), transparent 45%),
+        linear-gradient(145deg, #0f0a1e 0%, #140e2b 50%, #0f0a1e 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(125, 103, 209, 0.4);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 12px 48px rgba(0, 0, 0, 0.4);
+    }
+    
+    .preview-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(163, 148, 240, 0.5), transparent);
+    }
+    
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      border: none;
+      background: white;
+      border-radius: 16px;
+      margin: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      transition: opacity 0.4s ease;
+    }
+    
+    /* ===== PREMIUM CHECKLIST ===== */
+    .checklist-item {
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.5), rgba(30, 22, 54, 0.65));
+      border: 1px solid rgba(90, 66, 168, 0.35);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .checklist-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, #5a42a8, #7d67d1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .checklist-item:hover {
+      background: linear-gradient(145deg, rgba(59, 42, 125, 0.65), rgba(42, 30, 89, 0.75));
+      border-color: rgba(125, 103, 209, 0.55);
+      transform: translateX(5px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .checklist-item:hover::before { opacity: 1; }
+    
+    .checklist-item.completed {
+      border-color: rgba(0, 212, 170, 0.6);
+      background: linear-gradient(145deg, rgba(0, 45, 38, 0.4), rgba(0, 30, 26, 0.55));
+    }
+    
+    .checklist-item.completed::before {
+      background: linear-gradient(180deg, #00d4aa, #00f5c3);
+      opacity: 1;
+    }
+    
+    .check-icon {
+      width: 28px; height: 28px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.7), rgba(30, 22, 54, 0.85));
+      border: 1.5px solid rgba(90, 66, 168, 0.6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    .checklist-item.completed .check-icon {
+      background: linear-gradient(145deg, #00d4aa, #00a885);
+      border-color: #00f5c3;
+      box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+      transform: scale(1.1);
+    }
+    
+    /* ===== PREMIUM PREVIEW PLACEHOLDER ===== */
+    .preview-placeholder {
+      background: 
+        radial-gradient(600px 400px at 30% 20%, rgba(90, 66, 168, 0.18), transparent 35%),
+        radial-gradient(500px 350px at 70% 80%, rgba(125, 103, 209, 0.15), transparent 40%),
+        linear-gradient(145deg, #0f0a1e 0%, #140e2b 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .preview-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 25% 35%, rgba(125, 103, 209, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 75% 65%, rgba(90, 66, 168, 0.1) 0%, transparent 30%);
+      animation: gradient-xy 20s ease infinite;
+      pointer-events: none;
+    }
+    
+    .placeholder-glow {
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125, 103, 209, 0.25) 0%, transparent 70%);
+      animation: float-slow 10s ease-in-out infinite;
+      filter: blur(20px);
+      opacity: 0.6;
+    }
+    
+    .placeholder-glow:nth-child(2) {
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(0, 212, 170, 0.2) 0%, transparent 70%);
+      animation-delay: -3s;
+      right: 10%; bottom: 15%;
+    }
+    
+    /* ===== LOADING DOTS PREMIUM ===== */
     .loading-dots span {
       display: inline-block;
-      width: 8px; height: 8px;
-      margin: 0 2px;
+      width: 10px; height: 10px;
+      margin: 0 3px;
       border-radius: 50%;
-      background: #7d67d1;
-      animation: bounce 1.4s infinite ease-in-out both;
+      background: linear-gradient(145deg, #7d67d1, #5a42a8);
+      animation: bounce 1.5s infinite ease-in-out both;
+      box-shadow: 0 2px 8px rgba(125, 103, 209, 0.4);
     }
     .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
     .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
     .loading-dots span:nth-child(3) { animation-delay: 0s; }
     
     @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-      40% { transform: scale(1.2); opacity: 1; }
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1.3); opacity: 1; box-shadow: 0 4px 16px rgba(125, 103, 209, 0.6); }
     }
     
-    /* ===== CHECKLIST ITEMS ===== */
-    .checklist-item {
-      padding: 12px 16px;
+    /* ===== TOAST PREMIUM ===== */
+    .toast {
+      background: linear-gradient(145deg, rgba(42, 30, 89, 0.95), rgba(30, 22, 54, 0.98));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(163, 148, 240, 0.45);
+      border-left: 4px solid;
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      max-width: 380px;
+      box-shadow: 
+        0 12px 48px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(90, 66, 168, 0.2),
+        0 0 32px rgba(125, 103, 209, 0.25);
+      animation: fadeInUp 0.4s ease forwards, glow-pulse 4s ease-in-out infinite;
+    }
+    
+    .toast-info { border-left-color: #7d67d1; }
+    .toast-success { border-left-color: #00d4aa; }
+    .toast-error { border-left-color: #f07178; }
+    
+    .toast-icon {
+      width: 32px; height: 32px;
       border-radius: 10px;
-      background: rgba(42, 30, 89, 0.4);
-      border: 1px solid rgba(90, 66, 168, 0.25);
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .checklist-item:hover {
-      background: rgba(59, 42, 125, 0.55);
-      border-color: rgba(125, 103, 209, 0.45);
-      transform: translateX(4px);
-    }
-    .checklist-item.completed {
-      border-color: rgba(0, 212, 170, 0.5);
-      background: rgba(0, 45, 38, 0.3);
-    }
-    .checklist-item.completed .check-icon {
-      background: #00d4aa;
-      color: #0a0514;
-    }
-    
-    .check-icon {
-      width: 24px; height: 24px;
-      border-radius: 6px;
-      background: rgba(90, 66, 168, 0.5);
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
       flex-shrink: 0;
-      transition: all 0.3s ease;
+      margin-top: 2px;
     }
     
-    /* ===== SIDEBAR GRADIENT BORDER ===== */
-    .sidebar-glow {
-      position: relative;
-    }
-    .sidebar-glow::before {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; left: 0;
-      width: 1px;
-      background: linear-gradient(180deg, transparent, #5a42a8, #7d67d1, #5a42a8, transparent);
-      animation: gradient-x 4s ease infinite;
-    }
-    
-    /* ===== PREVIEW PLACEHOLDER ===== */
-    .preview-placeholder {
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(90, 66, 168, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(125, 103, 209, 0.12) 0%, transparent 30%),
-        linear-gradient(135deg, #0f0a1e 0%, #1a1233 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-    }
+    .toast-info .toast-icon { background: linear-gradient(145deg, rgba(125, 103, 209, 0.25), rgba(90, 66, 168, 0.35)); }
+    .toast-success .toast-icon { background: linear-gradient(145deg, rgba(0, 212, 170, 0.25), rgba(0, 168, 133, 0.35)); }
+    .toast-error .toast-icon { background: linear-gradient(145deg, rgba(240, 113, 124, 0.25), rgba(224, 88, 99, 0.35)); }
     
     /* ===== RESPONSIVE ADJUSTMENTS ===== */
     @media (max-width: 1200px) {
-      .preview-frame { min-height: 400px; }
+      .preview-frame { min-height: 420px; }
+      .stage-label { display: none; }
     }
     @media (max-width: 768px) {
-      .preview-frame { min-height: 300px; }
-      .sidebar { width: 72px; }
+      .preview-frame { min-height: 320px; margin: 6px; }
+      .sidebar { width: 76px; }
       .sidebar-label { display: none; }
+      .roadmap-table { font-size: 0.8rem; }
+      .roadmap-table th, .roadmap-table td { padding: 10px 12px; }
     }
+    
+    /* ===== UTILITY CLASSES ===== */
+    .text-gradient {
+      background: linear-gradient(135deg, #c9c4f9, #a394f0, #7d67d1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .text-gradient-accent {
+      background: linear-gradient(135deg, #00f5c3, #00d4aa, #00a885);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .border-gradient {
+      position: relative;
+    }
+    
+    .border-gradient::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(163, 148, 240, 0.5), rgba(125, 103, 209, 0.3), transparent 40%, rgba(90, 66, 168, 0.4));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    
+    .animate-on-load {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
   </style>
 </head>
 <body class="antialiased">
   <!-- ===== MAIN APP CONTAINER ===== -->
-  <div id="app" class="flex h-screen w-screen overflow-hidden">
+  <div id="app" class="flex h-screen w-screen overflow-hidden relative z-10">
     
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar sidebar-glow w-64 flex-shrink-0 flex flex-col glass border-r border-aura-600/30">
-      <!-- Logo -->
-      <div class="p-5 border-b border-aura-600/30">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center shadow-lg shadow-aura-500/25">
-            <i data-lucide="sparkles" class="w-6 h-6 text-aura-900"></i>
+    <!-- ===== PREMIUM SIDEBAR ===== -->
+    <aside class="sidebar w-72 flex-shrink-0 flex flex-col glass border-r border-aura-600/40">
+      <!-- Logo Header -->
+      <div class="p-6 border-b border-aura-600/35">
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-aura-400 via-aura-300 to-aura-200 flex items-center justify-center shadow-2xl shadow-aura-500/40 glass-glow">
+              <i data-lucide="sparkles" class="w-7 h-7 text-aura-950"></i>
+            </div>
+            <div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-aura-900 animate-pulse"></div>
           </div>
           <div>
-            <h1 class="text-xl font-bold bg-gradient-to-r from-aura-200 to-aura-100 bg-clip-text text-transparent">Aura.ai</h1>
-            <p class="text-xs text-aura-300/70">Elite Web Generator</p>
+            <h1 class="text-2xl font-bold text-gradient tracking-tight">Aura.ai</h1>
+            <p class="text-xs text-aura-300/80 font-medium">Elite Generation Engine</p>
           </div>
         </div>
       </div>
       
-      <!-- Navigation -->
-      <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-aura-600/30 border border-aura-500/40 text-aura-100">
-          <i data-lucide="home" class="w-5 h-5"></i>
-          <span class="sidebar-label font-medium">Dashboard</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-aura-700/40 text-aura-200/80 transition-all">
-          <i data-lucide="folder-open" class="w-5 h-5"></i>
-          <span class="sidebar-label">Projects</span>
-          <span class="sidebar-label ml-auto text-xs px-2 py-0.5 rounded-full bg-aura-500/30 text-aura-200">12</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-aura-700/40 text-aura-200/80 transition-all">
-          <i data-lucide="code" class="w-5 h-5"></i>
-          <span class="sidebar-label">Templates</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-aura-700/40 text-aura-200/80 transition-all">
-          <i data-lucide="palette" class="w-5 h-5"></i>
-          <span class="sidebar-label">Themes</span>
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-aura-700/40 text-aura-200/80 transition-all">
-          <i data-lucide="settings" class="w-5 h-5"></i>
-          <span class="sidebar-label">Settings</span>
+      <!-- Premium Navigation -->
+      <nav class="flex-1 p-4 space-y-2.5 overflow-y-auto">
+        <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-gradient-to-r from-aura-600/40 to-aura-500/30 border border-aura-400/50 text-aura-50 shadow-lg shadow-aura-900/20">
+          <i data-lucide="home" class="w-5.5 h-5.5"></i>
+          <span class="sidebar-label font-semibold">Dashboard</span>
+          <span class="sidebar-label ml-auto w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         </a>
         
-        <div class="pt-4 mt-4 border-t border-aura-600/30">
-          <p class="px-4 text-xs font-semibold text-aura-300 uppercase tracking-wider mb-3">Recent</p>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-aura-700/30 text-aura-200/70 text-sm transition-all">
-            <i data-lucide="file" class="w-4 h-4"></i>
-            <span class="sidebar-label truncate">Landing Page v2</span>
+        <a href="#" class="flex items-center gap-4 px-5 py-3.5 rounded-2xl hover:bg-aura-700/50 text-aura-150/90 transition-all duration-300 group">
+          <i data-lucide="folder-open" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+          <span class="sidebar-label font-medium">Projects</span>
+          <span class="sidebar-label ml-auto text-xs px-3 py-1 rounded-full bg-aura-500/40 text-aura-100 font-semibold border border-aura-400/50">12</span>
+        </a>
+        
+        <a href="#" class="flex items-center gap-4 px-5 py-3.5 rounded-2xl hover:bg-aura-700/50 text-aura-150/90 transition-all duration-300 group">
+          <i data-lucide="code" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+          <span class="sidebar-label font-medium">Templates</span>
+        </a>
+        
+        <a href="#" class="flex items-center gap-4 px-5 py-3.5 rounded-2xl hover:bg-aura-700/50 text-aura-150/90 transition-all duration-300 group">
+          <i data-lucide="palette" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+          <span class="sidebar-label font-medium">Design System</span>
+        </a>
+        
+        <a href="#" class="flex items-center gap-4 px-5 py-3.5 rounded-2xl hover:bg-aura-700/50 text-aura-150/90 transition-all duration-300 group">
+          <i data-lucide="settings" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+          <span class="sidebar-label font-medium">Settings</span>
+        </a>
+        
+        <div class="pt-5 mt-5 border-t border-aura-600/40">
+          <p class="px-5 text-xs font-bold text-aura-300 uppercase tracking-wider mb-4">Recent Projects</p>
+          <a href="#" class="flex items-center gap-4 px-5 py-3 rounded-xl hover:bg-aura-700/40 text-aura-150/85 text-sm transition-all group">
+            <div class="w-2 h-2 rounded-full bg-aura-400 group-hover:scale-125 transition-transform"></div>
+            <span class="sidebar-label truncate font-medium">SaaS Landing Pro</span>
+            <span class="sidebar-label ml-auto text-xs text-aura-400">2h ago</span>
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-aura-700/30 text-aura-200/70 text-sm transition-all">
-            <i data-lucide="file" class="w-4 h-4"></i>
-            <span class="sidebar-label truncate">E-commerce UI</span>
+          <a href="#" class="flex items-center gap-4 px-5 py-3 rounded-xl hover:bg-aura-700/40 text-aura-150/85 text-sm transition-all group">
+            <div class="w-2 h-2 rounded-full bg-aura-300 group-hover:scale-125 transition-transform"></div>
+            <span class="sidebar-label truncate font-medium">E-Commerce Elite</span>
+            <span class="sidebar-label ml-auto text-xs text-aura-400">5h ago</span>
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-aura-700/30 text-aura-200/70 text-sm transition-all">
-            <i data-lucide="file" class="w-4 h-4"></i>
-            <span class="sidebar-label truncate">Portfolio Dark</span>
+          <a href="#" class="flex items-center gap-4 px-5 py-3 rounded-xl hover:bg-aura-700/40 text-aura-150/85 text-sm transition-all group">
+            <div class="w-2 h-2 rounded-full bg-aura-200 group-hover:scale-125 transition-transform"></div>
+            <span class="sidebar-label truncate font-medium">Portfolio Dark</span>
+            <span class="sidebar-label ml-auto text-xs text-aura-400">1d ago</span>
           </a>
         </div>
       </nav>
       
-      <!-- User Profile -->
-      <div class="p-4 border-t border-aura-600/30">
-        <div class="flex items-center gap-3 p-3 rounded-xl bg-aura-700/30">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center text-aura-900 font-bold">
-            JD
+      <!-- Premium User Profile -->
+      <div class="p-5 border-t border-aura-600/40">
+        <div class="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-aura-700/50 to-aura-600/40 border border-aura-500/50">
+          <div class="relative">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center text-aura-950 font-bold text-sm shadow-lg">
+              JD
+            </div>
+            <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-aura-900"></div>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="font-medium text-sm truncate">John Developer</p>
-            <p class="text-xs text-aura-300 truncate">Pro Plan • 847 credits</p>
+            <p class="font-semibold text-sm truncate">John Developer</p>
+            <p class="text-xs text-aura-200/80 truncate">Pro Plan • <span class="text-aura-100 font-semibold">847</span> credits</p>
           </div>
-          <button class="p-2 hover:bg-aura-600/40 rounded-lg transition-colors">
-            <i data-lucide="chevron-right" class="w-4 h-4 text-aura-300"></i>
+          <button class="p-2.5 hover:bg-aura-600/50 rounded-xl transition-colors group">
+            <i data-lucide="chevron-right" class="w-4.5 h-4.5 text-aura-200 group-hover:translate-x-0.5 transition-transform"></i>
           </button>
         </div>
       </div>
     </aside>
     
     <!-- ===== MAIN CONTENT AREA ===== -->
-    <main class="flex-1 flex flex-col min-w-0">
+    <main class="flex-1 flex flex-col min-w-0 relative">
       
-      <!-- Header -->
-      <header class="glass border-b border-aura-600/30 px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <button class="p-2 hover:bg-aura-700/40 rounded-lg transition-colors md:hidden">
-            <i data-lucide="menu" class="w-5 h-5"></i>
+      <!-- Premium Header -->
+      <header class="glass border-b border-aura-600/40 px-7 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-5">
+          <button class="p-2.5 hover:bg-aura-700/50 rounded-xl transition-colors lg:hidden">
+            <i data-lucide="menu" class="w-5.5 h-5.5"></i>
           </button>
           <div>
-            <h2 class="text-lg font-semibold">New Project</h2>
-            <p class="text-sm text-aura-300">Generate production-ready code from natural language</p>
+            <h2 class="text-xl font-bold text-gradient">New Project Generation</h2>
+            <p class="text-sm text-aura-200/85 mt-0.5">Transform natural language into production-ready code</p>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <button class="btn-secondary px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2">
-            <i data-lucide="download" class="w-4 h-4"></i>
+        <div class="flex items-center gap-4">
+          <button class="btn-secondary px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2.5">
+            <i data-lucide="download" class="w-4.5 h-4.5"></i>
             <span class="hidden sm:inline">Export</span>
           </button>
-          <button class="btn-primary px-5 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-            <i data-lucide="zap" class="w-4 h-4"></i>
-            <span>Deploy</span>
+          <button class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2.5">
+            <i data-lucide="zap" class="w-4.5 h-4.5"></i>
+            <span>Deploy Now</span>
           </button>
         </div>
       </header>
       
-      <!-- Workspace Grid -->
-      <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 overflow-hidden">
+      <!-- Premium Workspace Grid -->
+      <div class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-7 p-7 overflow-hidden">
         
         <!-- ===== LEFT PANEL: CHAT & BUILD ENGINE ===== -->
-        <div class="flex flex-col gap-6 min-h-0">
+        <div class="flex flex-col gap-7 min-h-0">
           
-          <!-- Chat Interface -->
-          <div class="glass-intense rounded-2xl flex flex-col min-h-[400px] max-h-[50vh]">
-            <div class="p-4 border-b border-aura-600/30 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                <span class="font-medium">Aura Intelligence</span>
+          <!-- Premium Chat Interface -->
+          <div class="glass-intense rounded-3xl flex flex-col min-h-[420px] max-h-[52vh] border-gradient">
+            <div class="p-5 border-b border-aura-600/40 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse-slow"></div>
+                  <div class="absolute inset-0 rounded-full bg-emerald-400/30 animate-ping"></div>
+                </div>
+                <span class="font-bold text-gradient-accent">Aura Intelligence v3.2</span>
               </div>
-              <button class="p-2 hover:bg-aura-600/40 rounded-lg transition-colors" title="Clear chat">
-                <i data-lucide="trash-2" class="w-4 h-4 text-aura-300"></i>
-              </button>
+              <div class="flex items-center gap-2">
+                <button class="p-2.5 hover:bg-aura-600/50 rounded-xl transition-colors" title="Clear conversation">
+                  <i data-lucide="trash-2" class="w-4.5 h-4.5 text-aura-200/80"></i>
+                </button>
+                <button class="p-2.5 hover:bg-aura-600/50 rounded-xl transition-colors" title="Settings">
+                  <i data-lucide="settings" class="w-4.5 h-4.5 text-aura-200/80"></i>
+                </button>
+              </div>
             </div>
             
             <!-- Messages Container -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
-              <!-- Welcome Message -->
-              <div class="message-ai rounded-2xl p-4 max-w-[95%]">
-                <div class="flex items-start gap-3">
-                  <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-aura-900"></i>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-5">
+              <!-- Premium Welcome Message -->
+              <div class="message-ai rounded-2xl p-5 max-w-[96%]">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0 shadow-lg shadow-aura-500/30">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-aura-950"></i>
                   </div>
                   <div>
-                    <p class="text-sm leading-relaxed">
-                      Welcome to <span class="font-semibold text-aura-200">Aura.ai</span>. I'm your elite web generation assistant. 
-                      Describe the website or application you'd like to build, and I'll generate production-ready code with a complete technical roadmap.
+                    <p class="text-sm leading-relaxed text-aura-50/95">
+                      Welcome to <span class="font-bold text-gradient">Aura.ai</span>. I'm your elite web generation assistant, engineered to transform ideas into production-ready code.
                     </p>
-                    <p class="text-xs text-aura-300 mt-2">Try: "Create a modern SaaS landing page with pricing tables and dark mode"</p>
+                    <p class="text-xs text-aura-200/80 mt-3">
+                      <span class="font-semibold text-aura-100">Try:</span> "Create a modern SaaS landing page with pricing tables, dark mode toggle, and animated hero section"
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                      <span class="px-3 py-1.5 rounded-xl bg-aura-700/50 border border-aura-500/40 text-xs text-aura-150">🚀 Landing Pages</span>
+                      <span class="px-3 py-1.5 rounded-xl bg-aura-700/50 border border-aura-500/40 text-xs text-aura-150">🛒 E-Commerce</span>
+                      <span class="px-3 py-1.5 rounded-xl bg-aura-700/50 border border-aura-500/40 text-xs text-aura-150">📊 Dashboards</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            <!-- Input Area -->
-            <div class="p-4 border-t border-aura-600/30">
-              <form id="prompt-form" class="flex gap-3">
+            <!-- Premium Input Area -->
+            <div class="p-5 border-t border-aura-600/40">
+              <form id="prompt-form" class="flex gap-4">
                 <div class="flex-1 relative">
                   <input 
                     type="text" 
                     id="prompt-input"
-                    placeholder="Describe your project..." 
-                    class="w-full px-4 py-3 rounded-xl bg-aura-700/40 border border-aura-600/40 focus:border-aura-400 focus:ring-2 focus:ring-aura-500/30 outline-none transition-all text-sm"
+                    placeholder="Describe your dream website..." 
+                    class="w-full px-5 py-4 rounded-2xl bg-aura-750/60 border border-aura-600/50 focus:border-aura-400 focus:ring-3 focus:ring-aura-500/30 outline-none transition-all text-sm font-medium placeholder:text-aura-300/60"
                     autocomplete="off"
                   />
-                  <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-aura-600/40 rounded-lg transition-colors">
-                    <i data-lucide="paperclip" class="w-4 h-4 text-aura-300"></i>
-                  </button>
+                  <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    <button type="button" class="p-2 hover:bg-aura-600/50 rounded-xl transition-colors" title="Attach file">
+                      <i data-lucide="paperclip" class="w-4.5 h-4.5 text-aura-200/80"></i>
+                    </button>
+                    <button type="button" class="p-2 hover:bg-aura-600/50 rounded-xl transition-colors" title="Voice input">
+                      <i data-lucide="mic" class="w-4.5 h-4.5 text-aura-200/80"></i>
+                    </button>
+                  </div>
                 </div>
                 <button 
                   type="submit" 
                   id="generate-btn"
-                  class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2 whitespace-nowrap"
+                  class="btn-primary px-7 py-4 rounded-2xl font-bold flex items-center gap-2.5 whitespace-nowrap shadow-xl"
                 >
-                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <i data-lucide="send" class="w-4.5 h-4.5"></i>
                   <span>Generate</span>
                 </button>
               </form>
-              <p class="text-xs text-aura-400/70 mt-2 text-center">
-                Aura.ai uses advanced AI to generate secure, optimized code • API Key: <code class="bg-aura-800 px-1.5 py-0.5 rounded text-aura-300">AIzaSyAcnAO0wBh4VvijOiQk7CkUYHbn_J6eigA</code>
+              <p class="text-xs text-aura-300/70 mt-3 text-center">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 inline mr-1"></i>
+                Aura.ai Engine • API Key: <code class="bg-aura-800/80 px-2 py-0.5 rounded-md text-aura-200 font-mono text-xs">AIzaSyAcnAO0wBh4VvijOiQk7CkUYHbn_J6eigA</code>
               </p>
             </div>
           </div>
           
-          <!-- Build Engine Panel -->
-          <div id="build-panel" class="glass-intense rounded-2xl flex-1 min-h-[300px] hidden">
-            <div class="p-4 border-b border-aura-600/30">
-              <h3 class="font-semibold flex items-center gap-2">
-                <i data-lucide="cpu" class="w-4 h-4 text-aura-300"></i>
-                Deep Build Engine
+          <!-- Premium Build Engine Panel -->
+          <div id="build-panel" class="glass-intense rounded-3xl flex-1 min-h-[340px] hidden border-gradient">
+            <div class="p-5 border-b border-aura-600/40">
+              <h3 class="font-bold flex items-center gap-3 text-gradient">
+                <i data-lucide="cpu" class="w-5 h-5 text-aura-200"></i>
+                Deep Build Engine <span class="text-xs px-2.5 py-1 rounded-full bg-aura-600/50 text-aura-100 font-semibold">v3.2.1</span>
               </h3>
             </div>
             
-            <div class="p-5 space-y-6">
+            <div class="p-6 space-y-7">
               <!-- Progress Header -->
               <div class="flex items-center justify-between">
                 <div>
-                  <p id="stage-title" class="font-medium">Initializing build pipeline...</p>
-                  <p id="stage-desc" class="text-sm text-aura-300 mt-1">Preparing environment</p>
+                  <p id="stage-title" class="font-bold text-lg">Initializing elite build pipeline...</p>
+                  <p id="stage-desc" class="text-sm text-aura-200/85 mt-1.5">Preparing secure environment with latest dependencies</p>
                 </div>
                 <div class="text-right">
-                  <span id="progress-percent" class="text-2xl font-bold bg-gradient-to-r from-aura-200 to-aura-100 bg-clip-text text-transparent">0%</span>
-                  <p class="text-xs text-aura-400">Complete</p>
+                  <span id="progress-percent" class="text-3xl font-bold text-gradient">0%</span>
+                  <p class="text-xs text-aura-300/80 mt-1">Compilation Complete</p>
                 </div>
               </div>
               
-              <!-- Progress Bar -->
-              <div class="h-2 bg-aura-700/50 rounded-full overflow-hidden">
-                <div id="progress-fill" class="progress-bar h-full w-0"></div>
+              <!-- Premium Progress Bar -->
+              <div class="progress-track">
+                <div id="progress-fill" class="progress-bar w-0"></div>
               </div>
               
-              <!-- 7 Stage Indicators -->
-              <div class="flex items-center justify-between px-2">
-                <div class="stage-dot" data-stage="1" title="Analysis"></div>
-                <div class="stage-dot" data-stage="2" title="Architecture"></div>
-                <div class="stage-dot" data-stage="3" title="Components"></div>
-                <div class="stage-dot" data-stage="4" title="Styling"></div>
-                <div class="stage-dot" data-stage="5" title="Logic"></div>
-                <div class="stage-dot" data-stage="6" title="Optimization"></div>
-                <div class="stage-dot" data-stage="7" title="Finalize"></div>
+              <!-- 7 Stage Indicators Premium -->
+              <div class="stage-container">
+                <div class="stage-dot" data-stage="1" title="Requirement Analysis"><span class="stage-label">Analysis</span></div>
+                <div class="stage-dot" data-stage="2" title="Architecture Design"><span class="stage-label">Architecture</span></div>
+                <div class="stage-dot" data-stage="3" title="Component Generation"><span class="stage-label">Components</span></div>
+                <div class="stage-dot" data-stage="4" title="Styling System"><span class="stage-label">Styling</span></div>
+                <div class="stage-dot" data-stage="5" title="Interactive Logic"><span class="stage-label">Logic</span></div>
+                <div class="stage-dot" data-stage="6" title="Quality Audit"><span class="stage-label">Audit</span></div>
+                <div class="stage-dot" data-stage="7" title="Final Bundle"><span class="stage-label">Bundle</span></div>
               </div>
               
-              <!-- Build Log -->
-              <div class="bg-aura-900/60 rounded-xl p-4 font-mono text-xs space-y-2 max-h-40 overflow-y-auto" id="build-log">
-                <div class="text-aura-400">[SYSTEM] Aura Build Engine v2.4.1 initialized</div>
-                <div class="text-aura-400">[INFO] Loading AI modules...</div>
+              <!-- Premium Build Log -->
+              <div class="bg-aura-900/70 rounded-2xl p-4 font-mono text-xs space-y-2.5 max-h-36 overflow-y-auto border border-aura-700/50" id="build-log">
+                <div class="text-aura-300">[SYSTEM] Aura Build Engine v3.2.1 initialized • Secure mode enabled</div>
+                <div class="text-aura-300">[INFO] Loading AI modules: intent-parser, code-generator, optimizer</div>
+                <div class="text-emerald-400">[✓] Environment validated • Dependencies cached</div>
               </div>
               
-              <!-- Code Generation Preview -->
-              <div class="space-y-2">
+              <!-- Premium Code Generation Preview -->
+              <div class="space-y-3">
                 <div class="flex items-center justify-between text-xs">
-                  <span class="text-aura-300">Generated Code Preview</span>
-                  <span id="lines-counter" class="text-aura-400">0 lines processed</span>
+                  <span class="text-aura-200 font-medium flex items-center gap-2">
+                    <i data-lucide="code" class="w-3.5 h-3.5"></i>
+                    Live Code Generation
+                  </span>
+                  <span id="lines-counter" class="text-aura-300 font-mono">0 lines processed</span>
                 </div>
-                <div id="code-preview" class="code-block max-h-32 overflow-hidden">
-                  <span class="code-comment">// Waiting for build to start...</span>
+                <div id="code-preview" class="code-block max-h-28 overflow-hidden audit-scanner">
+                  <span class="code-comment">// Awaiting build initiation • Premium simulation mode</span>
+                </div>
+              </div>
+              
+              <!-- Quality Audit Badge (appears during stage 6) -->
+              <div id="audit-badge" class="hidden">
+                <div class="audit-badge">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  <span>Quality Audit: <span id="audit-score">98</span>/100</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <!-- Blueprint Panel (Checklist) -->
-          <div id="blueprint-panel" class="glass-intense rounded-2xl flex-1 min-h-[200px] hidden">
-            <div class="p-4 border-b border-aura-600/30 flex items-center justify-between">
-              <h3 class="font-semibold flex items-center gap-2">
-                <i data-lucide="list-checks" class="w-4 h-4 text-aura-300"></i>
+          <!-- Premium Blueprint Panel (Roadmap Table) -->
+          <div id="blueprint-panel" class="glass-intense rounded-3xl flex-1 min-h-[240px] hidden border-gradient">
+            <div class="p-5 border-b border-aura-600/40 flex items-center justify-between">
+              <h3 class="font-bold flex items-center gap-3 text-gradient">
+                <i data-lucide="list-checks" class="w-5 h-5 text-aura-200"></i>
                 Technical Blueprint
               </h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-aura-600/40 text-aura-200">10 Requirements</span>
+              <span class="text-xs px-3 py-1.5 rounded-full bg-gradient-to-r from-aura-600/60 to-aura-500/50 text-aura-50 font-semibold border border-aura-400/50">10 Requirements</span>
             </div>
-            <div class="p-4 space-y-3 overflow-y-auto max-h-48" id="checklist-container">
-              <!-- Checklist items will be injected here -->
+            <div class="p-5 overflow-y-auto max-h-44">
+              <table class="roadmap-table">
+                <thead>
+                  <tr>
+                    <th class="w-10">#</th>
+                    <th>Technical Requirement</th>
+                    <th class="w-24">Priority</th>
+                  </tr>
+                </thead>
+                <tbody id="checklist-container">
+                  <!-- Checklist items injected dynamically -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
         
         <!-- ===== RIGHT PANEL: LIVE PREVIEW ===== -->
         <div class="flex flex-col min-h-0">
-          <div class="glass-intense rounded-2xl flex-1 flex flex-col overflow-hidden">
-            <div class="p-4 border-b border-aura-600/30 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="flex gap-1.5">
-                  <div class="w-3 h-3 rounded-full bg-red-400/80"></div>
-                  <div class="w-3 h-3 rounded-full bg-yellow-400/80"></div>
-                  <div class="w-3 h-3 rounded-full bg-emerald-400/80"></div>
+          <div class="glass-intense rounded-3xl flex-1 flex flex-col overflow-hidden border-gradient">
+            <div class="p-5 border-b border-aura-600/40 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="flex gap-2">
+                  <div class="w-3.5 h-3.5 rounded-full bg-red-400/90 border border-red-300/50"></div>
+                  <div class="w-3.5 h-3.5 rounded-full bg-yellow-400/90 border border-yellow-300/50"></div>
+                  <div class="w-3.5 h-3.5 rounded-full bg-emerald-400/90 border border-emerald-300/50"></div>
                 </div>
-                <span class="font-medium text-sm">Live Preview</span>
+                <span class="font-bold text-sm">Live Preview</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-aura-700/60 text-aura-150 font-medium">Interactive</span>
               </div>
-              <div class="flex items-center gap-2">
-                <button class="p-1.5 hover:bg-aura-600/40 rounded-lg transition-colors" title="Refresh">
-                  <i data-lucide="refresh-cw" class="w-4 h-4 text-aura-300"></i>
+              <div class="flex items-center gap-3">
+                <button class="p-2 hover:bg-aura-600/50 rounded-xl transition-colors" title="Refresh preview">
+                  <i data-lucide="refresh-cw" class="w-4.5 h-4.5 text-aura-200/80"></i>
                 </button>
-                <button class="p-1.5 hover:bg-aura-600/40 rounded-lg transition-colors" title="Fullscreen">
-                  <i data-lucide="maximize-2" class="w-4 h-4 text-aura-300"></i>
+                <button class="p-2 hover:bg-aura-600/50 rounded-xl transition-colors" title="Fullscreen">
+                  <i data-lucide="maximize-2" class="w-4.5 h-4.5 text-aura-200/80"></i>
                 </button>
-                <select class="bg-aura-700/40 border border-aura-600/40 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-aura-400">
-                  <option>Desktop</option>
-                  <option>Tablet</option>
-                  <option>Mobile</option>
+                <select class="bg-aura-750/60 border border-aura-600/50 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-aura-400 focus:ring-2 focus:ring-aura-500/30 transition-all">
+                  <option>🖥️ Desktop (1440px)</option>
+                  <option>📱 Tablet (768px)</option>
+                  <option>📱 Mobile (375px)</option>
                 </select>
               </div>
             </div>
             
-            <!-- Preview Area -->
+            <!-- Premium Preview Area -->
             <div class="preview-container flex-1 relative">
               <div id="preview-placeholder" class="preview-placeholder absolute inset-0">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-aura-500/30 to-aura-400/20 flex items-center justify-center mb-4 animate-float">
-                  <i data-lucide="monitor" class="w-8 h-8 text-aura-200"></i>
+                <div class="placeholder-glow"></div>
+                <div class="placeholder-glow"></div>
+                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-aura-500/40 to-aura-400/30 flex items-center justify-center mb-6 animate-float border border-aura-400/40 shadow-2xl shadow-aura-500/30">
+                  <i data-lucide="monitor" class="w-10 h-10 text-aura-100"></i>
                 </div>
-                <h4 class="text-lg font-semibold mb-2">Preview Ready</h4>
-                <p class="text-sm text-aura-300 max-w-xs">
-                  Your generated website will appear here after the 7-stage build process completes.
+                <h4 class="text-xl font-bold text-gradient mb-3">Preview Engine Ready</h4>
+                <p class="text-sm text-aura-200/90 max-w-xs leading-relaxed">
+                  Your generated website will render here after the 7-stage elite build process completes with full quality audit.
                 </p>
-                <div class="mt-6 flex items-center gap-2 text-xs text-aura-400">
-                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                  <span>Secure • Optimized • Production-Ready</span>
+                <div class="mt-8 flex items-center gap-3 text-xs text-aura-300/90">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Security Audited</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                    <span>Performance Optimized</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="circle-check" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Production Ready</span>
+                  </div>
                 </div>
               </div>
-              <iframe id="preview-frame" class="preview-frame hidden" sandbox="allow-scripts allow-same-origin"></iframe>
+              <iframe id="preview-frame" class="preview-frame hidden" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
             </div>
             
-            <!-- Preview Controls -->
-            <div class="p-4 border-t border-aura-600/30 flex items-center justify-between text-sm">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1.5 text-aura-300">
-                  <i data-lucide="circle-check" class="w-4 h-4 text-emerald-400"></i>
-                  <span id="preview-status">Awaiting generation</span>
+            <!-- Premium Preview Controls -->
+            <div class="p-5 border-t border-aura-600/40 flex items-center justify-between text-sm">
+              <div class="flex items-center gap-5">
+                <span class="flex items-center gap-2 text-aura-200/90">
+                  <i data-lucide="circle-check" class="w-4.5 h-4.5 text-emerald-400"></i>
+                  <span id="preview-status">Awaiting generation sequence</span>
                 </span>
               </div>
-              <div class="flex items-center gap-2">
-                <button id="copy-code-btn" class="btn-secondary px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 disabled:opacity-50" disabled>
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                  Copy Code
+              <div class="flex items-center gap-3">
+                <button id="copy-code-btn" class="btn-secondary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all" disabled>
+                  <i data-lucide="copy" class="w-4 h-4"></i>
+                  Copy Source
                 </button>
-                <button id="open-new-tab-btn" class="btn-primary px-4 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 disabled:opacity-50" disabled>
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                  Open Full
+                <button id="open-new-tab-btn" class="btn-primary px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all" disabled>
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                  Open Fullscreen
                 </button>
               </div>
             </div>
@@ -646,41 +1184,41 @@
     </main>
   </div>
   
-  <!-- ===== TOAST NOTIFICATIONS ===== -->
-  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+  <!-- ===== PREMIUM TOAST NOTIFICATIONS ===== -->
+  <div id="toast-container" class="fixed bottom-7 right-7 z-50 space-y-4 pointer-events-none"></div>
   
-  <!-- ===== JAVASCRIPT LOGIC ===== -->
+  <!-- ===== PREMIUM JAVASCRIPT LOGIC ===== -->
   <script>
-    // ===== CONFIGURATION & CONSTANTS =====
-    // ⚠️ SECURITY NOTE: In production, NEVER expose API keys in client-side code.
-    // This constant is included per project requirements for future backend integration.
+    // ===== ELITE CONFIGURATION & CONSTANTS =====
+    // ⚠️ SECURITY NOTE: API key included per project specification for future backend integration.
+    // In production environments, NEVER expose sensitive keys in client-side code.
     const AURA_CONFIG = {
       API_KEY: 'AIzaSyAcnAO0wBh4VvijOiQk7CkUYHbn_J6eigA',
-      API_ENDPOINT: 'https://api.aura.ai/v1/generate',
+      API_ENDPOINT: 'https://api.aura.ai/v3/generate',
       BUILD_STAGES: [
-        { id: 1, name: 'Analysis', desc: 'Parsing requirements & intent detection' },
-        { id: 2, name: 'Architecture', desc: 'Structuring component hierarchy' },
-        { id: 3, name: 'Components', desc: 'Generating reusable UI elements' },
-        { id: 4, name: 'Styling', desc: 'Applying theme & responsive CSS' },
-        { id: 5, name: 'Logic', desc: 'Implementing interactivity & state' },
-        { id: 6, name: 'Optimization', desc: 'Minifying, auditing & SEO prep' },
-        { id: 7, name: 'Finalize', desc: 'Bundling & preview compilation' }
+        { id: 1, name: 'Requirement Analysis', desc: 'Parsing intent, extracting entities, validating scope' },
+        { id: 2, name: 'Architecture Design', desc: 'Structuring component hierarchy, state management plan' },
+        { id: 3, name: 'Component Generation', desc: 'Creating reusable, accessible UI elements with props' },
+        { id: 4, name: 'Styling System', desc: 'Applying theme tokens, responsive breakpoints, animations' },
+        { id: 5, name: 'Interactive Logic', desc: 'Implementing event handlers, API integrations, state flows' },
+        { id: 6, name: 'Quality Audit', desc: 'Running accessibility checks, performance profiling, security scan' },
+        { id: 7, name: 'Final Bundle', desc: 'Tree-shaking, code splitting, optimization, preview compilation' }
       ],
-      BLUEPRINT_ITEMS: [
-        'Responsive layout system (mobile-first breakpoints)',
-        'Semantic HTML5 structure with ARIA labels',
-        'CSS custom properties for theme management',
-        'Accessibility compliance (WCAG 2.1 AA)',
-        'Performance budget (< 100KB initial load)',
-        'SEO meta tags & structured data integration',
-        'Cross-browser compatibility matrix (last 2 versions)',
-        'Security headers & CSP policy implementation',
-        'Lazy loading strategy for images & components',
-        'Build pipeline: Vite/Tailwind optimization config'
+      BLUEPRINT_REQUIREMENTS: [
+        { id: 1, requirement: 'Responsive layout system with mobile-first breakpoints (320px → 1920px)', priority: 'high' },
+        { id: 2, requirement: 'Semantic HTML5 structure with comprehensive ARIA labels and keyboard navigation', priority: 'high' },
+        { id: 3, requirement: 'CSS custom properties design token system for theme management and dark mode', priority: 'high' },
+        { id: 4, requirement: 'WCAG 2.1 AA accessibility compliance with screen reader testing matrix', priority: 'high' },
+        { id: 5, requirement: 'Performance budget enforcement: <100KB initial load, <2.5s FCP on 3G', priority: 'med' },
+        { id: 6, requirement: 'SEO optimization: meta tags, structured data, Open Graph, Twitter Cards', priority: 'med' },
+        { id: 7, requirement: 'Cross-browser compatibility: Chrome, Firefox, Safari, Edge (last 2 versions)', priority: 'high' },
+        { id: 8, requirement: 'Security headers implementation: CSP, X-Frame-Options, Referrer-Policy', priority: 'high' },
+        { id: 9, requirement: 'Asset optimization: WebP/AVIF images, font subsetting, critical CSS inlining', priority: 'med' },
+        { id: 10, requirement: 'Build pipeline: Vite + Tailwind JIT + ESBuild for optimal production output', priority: 'low' }
       ]
     };
     
-    // ===== DOM ELEMENTS =====
+    // ===== DOM ELEMENTS CACHE =====
     const elements = {
       chatMessages: document.getElementById('chat-messages'),
       promptForm: document.getElementById('prompt-form'),
@@ -701,10 +1239,12 @@
       previewStatus: document.getElementById('preview-status'),
       copyCodeBtn: document.getElementById('copy-code-btn'),
       openNewTabBtn: document.getElementById('open-new-tab-btn'),
-      toastContainer: document.getElementById('toast-container')
+      toastContainer: document.getElementById('toast-container'),
+      auditBadge: document.getElementById('audit-badge'),
+      auditScore: document.getElementById('audit-score')
     };
     
-    // ===== UTILITY FUNCTIONS =====
+    // ===== PREMIUM UTILITY FUNCTIONS =====
     function addToast(message, type = 'info') {
       const toast = document.createElement('div');
       const icons = { info: 'info', success: 'check-circle', error: 'alert-circle' };
@@ -714,45 +1254,45 @@
         error: 'from-red-500 to-rose-400' 
       };
       
-      toast.className = `glass-intense rounded-xl p-4 flex items-start gap-3 max-w-sm animate-[slideInRight_0.3s_ease]`;
+      toast.className = `toast toast-${type} pointer-events-auto`;
       toast.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br ${colors[type]} flex items-center justify-center flex-shrink-0 mt-0.5">
+        <div class="toast-icon">
           <i data-lucide="${icons[type]}" class="w-5 h-5 text-white"></i>
         </div>
-        <div>
-          <p class="font-medium text-sm">${message}</p>
-          <button class="mt-2 text-xs text-aura-300 hover:text-aura-100 transition-colors" onclick="this.closest('div').remove()">Dismiss</button>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm text-aura-50">${message}</p>
+          <button class="mt-2.5 text-xs text-aura-200/80 hover:text-aura-50 transition-colors font-medium" onclick="this.closest('.toast').remove()">Dismiss</button>
         </div>
       `;
       
       elements.toastContainer.appendChild(toast);
       lucide.createIcons();
       
-      // Auto-remove after 5 seconds
+      // Auto-remove after 6 seconds with smooth exit
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateX(20px)';
-        setTimeout(() => toast.remove(), 300);
-      }, 5000);
+        toast.style.transform = 'translateX(24px)';
+        setTimeout(() => toast.remove(), 400);
+      }, 6000);
     }
     
     function addMessage(content, isUser = false) {
       const msgDiv = document.createElement('div');
-      msgDiv.className = `${isUser ? 'message-user' : 'message-ai'} rounded-2xl p-4 max-w-[95%] ml-auto ${isUser ? '' : ''}`;
+      msgDiv.className = `${isUser ? 'message-user' : 'message-ai'} rounded-2xl p-5 max-w-[96%] ${isUser ? 'ml-auto' : ''}`;
       
       msgDiv.innerHTML = `
-        <div class="flex items-start gap-3">
+        <div class="flex items-start gap-4">
           ${!isUser ? `
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="sparkles" class="w-4 h-4 text-aura-900"></i>
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0 shadow-lg shadow-aura-500/30">
+            <i data-lucide="sparkles" class="w-5 h-5 text-aura-950"></i>
           </div>` : ''}
-          <div class="${isUser ? 'text-right' : ''}">
-            <p class="text-sm leading-relaxed">${content}</p>
-            ${isUser ? '<p class="text-xs text-aura-300 mt-1">You • Just now</p>' : ''}
+          <div class="${isUser ? 'text-right' : ''} flex-1">
+            <p class="text-sm leading-relaxed text-aura-50/95">${content}</p>
+            ${isUser ? '<p class="text-xs text-aura-200/70 mt-2 font-medium">You • Just now</p>' : ''}
           </div>
           ${isUser ? `
-          <div class="w-8 h-8 rounded-xl bg-aura-600/40 flex items-center justify-center flex-shrink-0">
-            <span class="text-xs font-medium">JD</span>
+          <div class="w-10 h-10 rounded-2xl bg-aura-600/50 border border-aura-500/60 flex items-center justify-center flex-shrink-0 shadow">
+            <span class="text-xs font-bold text-aura-100">JD</span>
           </div>` : ''}
         </div>
       `;
@@ -760,30 +1300,61 @@
       elements.chatMessages.appendChild(msgDiv);
       elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
       lucide.createIcons();
+      
+      // Animate entrance
+      msgDiv.style.opacity = '0';
+      msgDiv.style.transform = isUser ? 'translateX(24px)' : 'translateX(-24px)';
+      setTimeout(() => {
+        msgDiv.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+        msgDiv.style.opacity = '1';
+        msgDiv.style.transform = 'translateX(0)';
+      }, 10);
     }
     
     function addLogEntry(message, type = 'info') {
       const entry = document.createElement('div');
-      const colors = { info: 'text-aura-400', success: 'text-emerald-400', warn: 'text-yellow-400', error: 'text-red-400' };
+      const colors = { 
+        info: 'text-aura-300', 
+        success: 'text-emerald-400 font-medium', 
+        warn: 'text-amber-400', 
+        error: 'text-red-400',
+        process: 'text-aura-200/90'
+      };
       entry.className = colors[type] || colors.info;
-      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      entry.textContent = `[${new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}] ${message}`;
       elements.buildLog.appendChild(entry);
       elements.buildLog.scrollTop = elements.buildLog.scrollHeight;
+      
+      // Subtle highlight animation
+      entry.style.opacity = '0';
+      entry.style.transform = 'translateX(-8px)';
+      setTimeout(() => {
+        entry.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        entry.style.opacity = '1';
+        entry.style.transform = 'translateX(0)';
+      }, 5);
     }
     
     function updateCodePreview(stage, lines) {
       const snippets = {
-        1: `<span class="code-comment">// Stage 1: Requirement Analysis</span>\n<span class="code-keyword">const</span> requirements = <span class="code-function">parseIntent</span>(userPrompt);`,
-        2: `<span class="code-comment">// Stage 2: Architecture Planning</span>\n<span class="code-keyword">class</span> <span class="code-function">AppStructure</span> {\n  <span class="code-keyword">constructor</span>() { <span class="code-comment">// Component tree</span> }\n}`,
-        3: `<span class="code-comment">// Stage 3: Component Generation</span>\n<span class="code-keyword">export const</span> Header = () => <span class="code-tag">&lt;header</span> <span class="code-attr">className</span>=<span class="code-string">"glass-header"</span><span class="code-tag">&gt;</span>...</span>`,
-        4: `<span class="code-comment">// Stage 4: Styling System</span>\n<span class="code-keyword">const</span> theme = {\n  colors: { primary: <span class="code-string">'#7d67d1'</span> },\n  breakpoints: { mobile: <span class="code-string">'640px'</span> }\n}`,
-        5: `<span class="code-comment">// Stage 5: Interactive Logic</span>\n<span class="code-keyword">function</span> <span class="code-function">handleSubmission</span>(e) {\n  e.preventDefault();\n  <span class="code-comment">// Form validation & API call</span>\n}`,
-        6: `<span class="code-comment">// Stage 6: Optimization Pass</span>\n<span class="code-comment">// ✓ Tree-shaking unused exports</span>\n<span class="code-comment">// ✓ Image compression: WebP fallbacks</span>\n<span class="code-comment">// ✓ Critical CSS inlining</span>`,
-        7: `<span class="code-comment">// Stage 7: Final Bundle</span>\n<span class="code-keyword">export default</span> <span class="code-keyword">function</span> <span class="code-function">AuraGeneratedApp</span>() {\n  <span class="code-keyword">return</span> <span class="code-tag">&lt;AuraProvider</span><span class="code-tag">&gt;</span>...</span>\n}`
+        1: `<span class="code-comment">// Stage 1: Requirement Analysis</span>\n<span class="code-keyword">const</span> <span class="code-function">parseIntent</span> = (prompt) => {\n  <span class="code-comment">// NLP entity extraction & scope validation</span>\n  <span class="code-keyword">return</span> <span class="code-function">validateScope</span>(entities);\n};`,
+        2: `<span class="code-comment">// Stage 2: Architecture Design</span>\n<span class="code-keyword">class</span> <span class="code-function">AppArchitecture</span> {\n  <span class="code-keyword">constructor</span>(requirements) {\n    <span class="code-comment">// Component tree generation</span>\n    <span class="code-keyword">this</span>.tree = <span class="code-function">buildComponentTree</span>(requirements);\n  }\n}`,
+        3: `<span class="code-comment">// Stage 3: Component Generation</span>\n<span class="code-keyword">export const</span> <span class="code-function">HeroSection</span> = ({ title, cta }) => (\n  <span class="code-tag">&lt;section</span> <span class="code-attr">className</span>=<span class="code-string">"hero-glass"</span><span class="code-tag">&gt;</span>\n    <span class="code-tag">&lt;h1</span> <span class="code-attr">className</span>=<span class="code-string">"text-gradient"</span><span class="code-tag">&gt;</span>{title}<span class="code-tag">&lt;/h1&gt;</span>\n    <span class="code-comment">// ... premium component implementation</span>\n  <span class="code-tag">&lt;/section&gt;</span>\n);`,
+        4: `<span class="code-comment">// Stage 4: Styling System</span>\n<span class="code-keyword">const</span> designTokens = {\n  colors: {\n    primary: { DEFAULT: <span class="code-string">'#7d67d1'</span>, glow: <span class="code-string">'rgba(125,103,209,0.6)'</span> },\n    surface: { glass: <span class="code-string">'rgba(30,22,54,0.85)'</span> }\n  },\n  breakpoints: { mobile: <span class="code-string">'640px'</span>, tablet: <span class="code-string">'1024px'</span> }\n};`,
+        5: `<span class="code-comment">// Stage 5: Interactive Logic</span>\n<span class="code-keyword">function</span> <span class="code-function">handleFormSubmission</span>(e) {\n  e.preventDefault();\n  <span class="code-comment">// Validation → API call → State update → UI feedback</span>\n  <span class="code-keyword">const</span> result = <span class="code-keyword">await</span> <span class="code-function">secureApiCall</span>(formData);\n  <span class="code-function">updateUI</span>(result);\n}`,
+        6: `<span class="code-comment">// Stage 6: Quality Audit</span>\n<span class="code-comment">// ✓ Accessibility: axe-core scan passed (98/100)</span>\n<span class="code-comment">// ✓ Performance: Lighthouse audit (97/100)</span>\n<span class="code-comment">// ✓ Security: CSP validation, XSS sanitization verified</span>\n<span class="code-comment">// ✓ Bundle: Tree-shaking removed 42% unused code</span>`,
+        7: `<span class="code-comment">// Stage 7: Final Bundle</span>\n<span class="code-keyword">export default</span> <span class="code-keyword">function</span> <span class="code-function">AuraGeneratedApp</span>() {\n  <span class="code-comment">// Production-ready component with all optimizations</span>\n  <span class="code-keyword">return</span> (\n    <span class="code-tag">&lt;AuraProvider</span> <span class="code-attr">config</span>=<span class="code-string">{config}</span><span class="code-tag">&gt;</span>\n      <span class="code-comment">// Render optimized component tree</span>\n    <span class="code-tag">&lt;/AuraProvider&gt;</span>\n  );\n}`
       };
       
       elements.codePreview.innerHTML = snippets[stage] || elements.codePreview.innerHTML;
-      elements.linesCounter.textContent = `${lines} lines processed`;
+      elements.linesCounter.textContent = `${lines.toLocaleString()} lines processed`;
+      
+      // Add subtle typing animation effect
+      elements.codePreview.style.opacity = '0.7';
+      setTimeout(() => {
+        elements.codePreview.style.transition = 'opacity 0.3s ease';
+        elements.codePreview.style.opacity = '1';
+      }, 100);
     }
     
     function updateStageIndicator(stageNum, status) {
@@ -796,121 +1367,227 @@
       });
     }
     
-    function generateBlueprint() {
+    function generateBlueprintTable() {
       elements.checklistContainer.innerHTML = '';
       
-      AURA_CONFIG.BLUEPRINT_ITEMS.forEach((item, index) => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'checklist-item';
-        itemEl.innerHTML = `
-          <div class="check-icon">
-            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
-          </div>
-          <span class="text-sm">${index + 1}. ${item}</span>
-        `;
-        elements.checklistContainer.appendChild(itemEl);
+      AURA_CONFIG.BLUEPRINT_REQUIREMENTS.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.className = 'animate-on-load';
+        row.style.animationDelay = `${index * 80}ms`;
         
-        // Staggered completion animation
+        const priorityClass = {
+          high: 'priority-high',
+          med: 'priority-med',
+          low: 'priority-low'
+        }[item.priority];
+        
+        const priorityLabel = {
+          high: 'Critical',
+          med: 'Important',
+          low: 'Enhancement'
+        }[item.priority];
+        
+        row.innerHTML = `
+          <td class="font-mono text-aura-300">${String(item.id).padStart(2, '0')}</td>
+          <td class="font-medium">${item.requirement}</td>
+          <td><span class="priority ${priorityClass}">${priorityLabel}</span></td>
+        `;
+        elements.checklistContainer.appendChild(row);
+        
+        // Staggered completion animation after table render
         setTimeout(() => {
-          itemEl.classList.add('completed');
-          itemEl.querySelector('.check-icon').innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i>';
+          row.classList.add('completed');
+          row.querySelector('td:first-child').innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>`;
           lucide.createIcons();
-        }, 300 + (index * 150));
+        }, 400 + (index * 120));
       });
       
       lucide.createIcons();
+      addToast('Technical blueprint generated • 10 requirements validated', 'success');
     }
     
-    function renderPreview() {
+    function renderPremiumPreview() {
       const previewHTML = `
         <!DOCTYPE html>
         <html lang="en" class="dark">
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-          <title>Aura Generated Preview</title>
+          <title>Aura Generated • Premium Landing</title>
           <script src="https://cdn.tailwindcss.com"><\/script>
-          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+          <script src="https://unpkg.com/lucide@latest"><\/script>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
           <style>
+            :root {
+              --aura-primary: #7d67d1;
+              --aura-primary-glow: rgba(125, 103, 209, 0.6);
+              --aura-surface: rgba(30, 22, 54, 0.85);
+              --aura-border: rgba(163, 148, 240, 0.4);
+            }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
             body { 
-              font-family: 'Inter', system-ui; 
-              background: linear-gradient(135deg, #0f0a1e 0%, #1a1233 100%);
-              color: #e6e1ff;
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              background: 
+                radial-gradient(1200px 800px at 15% 15%, rgba(90, 66, 168, 0.18), transparent 45%),
+                radial-gradient(1000px 700px at 85% 25%, rgba(125, 103, 209, 0.15), transparent 50%),
+                linear-gradient(145deg, #0f0a1e 0%, #140e2b 100%);
+              color: #f0ebff;
+              min-height: 100vh;
+              line-height: 1.6;
             }
             .glass {
-              background: rgba(30, 22, 54, 0.7);
-              backdrop-filter: blur(16px);
-              border: 1px solid rgba(125, 103, 209, 0.3);
+              background: var(--aura-surface);
+              backdrop-filter: blur(24px);
+              -webkit-backdrop-filter: blur(24px);
+              border: 1px solid var(--aura-border);
+              border-radius: 20px;
+              box-shadow: 
+                0 8px 40px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 32px rgba(125, 103, 209, 0.15);
             }
-            .gradient-text {
-              background: linear-gradient(135deg, #a394f0, #7d67d1);
+            .glass-intense {
+              background: linear-gradient(145deg, rgba(42, 30, 89, 0.92), rgba(30, 22, 54, 0.96));
+              backdrop-filter: blur(36px);
+              border: 1px solid rgba(163, 148, 240, 0.55);
+              box-shadow: 
+                0 16px 64px rgba(0, 0, 0, 0.55),
+                0 0 48px rgba(125, 103, 209, 0.28);
+            }
+            .text-gradient {
+              background: linear-gradient(135deg, #c9c4f9, #a394f0, #7d67d1);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
+              background-clip: text;
             }
+            .text-gradient-accent {
+              background: linear-gradient(135deg, #00f5c3, #00d4aa, #00a885);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            }
+            .btn-primary {
+              background: linear-gradient(145deg, #5a42a8, #7d67d1);
+              border: 1px solid rgba(163, 148, 240, 0.5);
+              transition: all 0.3s ease;
+            }
+            .btn-primary:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 40px rgba(125, 103, 209, 0.5);
+            }
+            .feature-card {
+              transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .feature-card:hover {
+              transform: translateY(-6px);
+              box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 32px rgba(125, 103, 209, 0.3);
+            }
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-12px); }
+            }
+            .animate-float { animation: float 8s ease-in-out infinite; }
           </style>
         </head>
-        <body class="min-h-screen p-8">
-          <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-4">
-                <i data-lucide="sparkles" class="w-4 h-4 text-aura-300"></i>
-                <span class="text-sm font-medium">Generated by Aura.ai</span>
-              </div>
-              <h1 class="text-4xl font-bold gradient-text mb-4">Your Elite Web Experience</h1>
-              <p class="text-lg text-aura-300 max-w-2xl mx-auto">
-                This preview demonstrates the production-ready output from your prompt. 
-                All code is optimized, accessible, and ready for deployment.
-              </p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-12">
-              <div class="glass rounded-2xl p-6 text-center hover:scale-[1.02] transition-transform">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-aura-500 to-aura-400 flex items-center justify-center mx-auto mb-4">
-                  <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        <body class="antialiased">
+          <!-- Navigation -->
+          <nav class="glass sticky top-6 mx-6 z-50 border-gradient">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-aura-950"></i>
                 </div>
-                <h3 class="font-semibold mb-2">Lightning Fast</h3>
-                <p class="text-sm text-aura-300">Optimized bundle with code splitting & lazy loading</p>
+                <span class="font-bold text-lg text-gradient">Aura Generated</span>
               </div>
-              <div class="glass rounded-2xl p-6 text-center hover:scale-[1.02] transition-transform">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center mx-auto mb-4">
-                  <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+              <div class="hidden md:flex items-center gap-8">
+                <a href="#" class="text-sm font-medium hover:text-aura-100 transition-colors">Features</a>
+                <a href="#" class="text-sm font-medium hover:text-aura-100 transition-colors">Pricing</a>
+                <a href="#" class="text-sm font-medium hover:text-aura-100 transition-colors">Docs</a>
+                <a href="#" class="text-sm font-medium hover:text-aura-100 transition-colors">Contact</a>
+              </div>
+              <button class="btn-primary px-5 py-2.5 rounded-xl text-sm font-semibold">Get Started</button>
+            </div>
+          </nav>
+          
+          <!-- Hero Section -->
+          <section class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-float">
+              <i data-lucide="sparkles" class="w-4 h-4 text-aura-200"></i>
+              <span class="text-sm font-medium text-gradient-accent">Generated by Aura.ai Engine</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold text-gradient mb-6 leading-tight">
+              Build Elite Web Experiences<br/>in Seconds, Not Weeks
+            </h1>
+            <p class="text-xl text-aura-200/90 max-w-3xl mx-auto mb-10">
+              This premium landing page was generated by Aura.ai's elite engine. Every line of code is optimized, accessible, and production-ready.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button class="btn-primary px-8 py-4 rounded-2xl font-bold text-lg shadow-xl">Start Building Free</button>
+              <button class="px-8 py-4 rounded-2xl font-semibold text-lg border border-aura-500/50 hover:bg-aura-700/40 transition-all">View Documentation</button>
+            </div>
+            <div class="mt-16 flex items-center justify-center gap-8 text-sm text-aura-300/90">
+              <div class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                <span>98/100 Lighthouse Score</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                <span>WCAG 2.1 AA Compliant</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="package" class="w-4 h-4 text-aura-300"></i>
+                <span>87KB Optimized Bundle</span>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Features Grid -->
+          <section class="max-w-7xl mx-auto px-6 py-16">
+            <div class="text-center mb-16">
+              <h2 class="text-3xl font-bold text-gradient mb-4">Elite Features, Generated Automatically</h2>
+              <p class="text-lg text-aura-200/85 max-w-2xl mx-auto">Every component follows premium design principles and technical best practices</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+              <div class="glass-intense p-7 rounded-2xl feature-card border-gradient">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-aura-500 to-aura-400 flex items-center justify-center mb-6 shadow-lg shadow-aura-500/30">
+                  <i data-lucide="zap" class="w-7 h-7 text-white"></i>
                 </div>
-                <h3 class="font-semibold mb-2">Secure by Default</h3>
-                <p class="text-sm text-aura-300">CSP headers, XSS protection, and dependency auditing</p>
+                <h3 class="text-xl font-bold mb-3">Lightning Performance</h3>
+                <p class="text-aura-200/90">Code-splitting, lazy loading, and critical CSS inlining ensure sub-2s load times on all connections.</p>
               </div>
-              <div class="glass rounded-2xl p-6 text-center hover:scale-[1.02] transition-transform">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-400 flex items-center justify-center mx-auto mb-4">
-                  <i data-lucide="palette" class="w-6 h-6 text-white"></i>
+              <div class="glass-intense p-7 rounded-2xl feature-card border-gradient">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30">
+                  <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
                 </div>
-                <h3 class="font-semibold mb-2">Beautiful UI</h3>
-                <p class="text-sm text-aura-300">Glassmorphism, smooth animations, and dark mode</p>
+                <h3 class="text-xl font-bold mb-3">Security First</h3>
+                <p class="text-aura-200/90">Automatic CSP headers, XSS sanitization, and dependency auditing protect your users by default.</p>
+              </div>
+              <div class="glass-intense p-7 rounded-2xl feature-card border-gradient">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-400 flex items-center justify-center mb-6 shadow-lg shadow-rose-500/30">
+                  <i data-lucide="palette" class="w-7 h-7 text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Premium UI System</h3>
+                <p class="text-aura-200/90">Glassmorphism, smooth animations, and dark mode built with a scalable design token system.</p>
               </div>
             </div>
-            
-            <div class="glass rounded-2xl p-6 mb-8">
-              <h3 class="font-semibold mb-4 flex items-center gap-2">
-                <i data-lucide="code" class="w-4 h-4 text-aura-300"></i>
-                Generated Tech Stack
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1.5 rounded-lg bg-aura-700/50 text-xs font-mono">HTML5</span>
-                <span class="px-3 py-1.5 rounded-lg bg-aura-700/50 text-xs font-mono">Tailwind CSS</span>
-                <span class="px-3 py-1.5 rounded-lg bg-aura-700/50 text-xs font-mono">Vanilla JS</span>
-                <span class="px-3 py-1.5 rounded-lg bg-aura-700/50 text-xs font-mono">Vite Build</span>
-                <span class="px-3 py-1.5 rounded-lg bg-aura-700/50 text-xs font-mono">ES Modules</span>
-              </div>
+          </section>
+          
+          <!-- CTA Section -->
+          <section class="max-w-4xl mx-auto px-6 py-16 text-center">
+            <div class="glass-intense rounded-3xl p-10 border-gradient">
+              <h3 class="text-2xl font-bold text-gradient mb-4">Ready to Generate Your Next Project?</h3>
+              <p class="text-lg text-aura-200/90 mb-8 max-w-2xl mx-auto">Join thousands of developers building elite web experiences with Aura.ai</p>
+              <button class="btn-primary px-8 py-4 rounded-2xl font-bold text-lg shadow-xl">Create Your Project →</button>
+              <p class="text-xs text-aura-300/70 mt-6">Generated by Aura.ai Engine v3.2.1 • Session: ${Math.random().toString(36).substr(2, 12).toUpperCase()}</p>
             </div>
-            
-            <div class="text-center">
-              <button class="px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-aura-500 to-aura-400 hover:from-aura-400 hover:to-aura-300 transition-all shadow-lg shadow-aura-500/25 flex items-center gap-2 mx-auto">
-                <i data-lucide="rocket" class="w-4 h-4"></i>
-                Deploy This Project
-              </button>
-              <p class="text-xs text-aura-400 mt-4">Preview generated by Aura.ai Engine • Session ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
-            </div>
-          </div>
+          </section>
+          
+          <!-- Footer -->
+          <footer class="border-t border-aura-700/50 py-8 text-center text-sm text-aura-300/80">
+            <p>© 2026 Aura Generated Preview • Built with ❤️ by Aura.ai Engine</p>
+          </footer>
+          
           <script>
-            // Initialize Lucide icons in preview
             document.addEventListener('DOMContentLoaded', () => {
               if (typeof lucide !== 'undefined') lucide.createIcons();
             });
@@ -919,125 +1596,170 @@
         </html>
       `;
       
-      // Write to iframe
+      // Write to iframe with smooth transition
       const doc = elements.previewFrame.contentDocument || elements.previewFrame.contentWindow.document;
       doc.open();
       doc.write(previewHTML);
       doc.close();
       
-      // Hide placeholder, show frame
-      elements.previewPlaceholder.classList.add('hidden');
+      // Smooth reveal animation
+      elements.previewFrame.style.opacity = '0';
       elements.previewFrame.classList.remove('hidden');
       
+      setTimeout(() => {
+        elements.previewPlaceholder.classList.add('hidden');
+        elements.previewFrame.style.transition = 'opacity 0.6s ease';
+        elements.previewFrame.style.opacity = '1';
+      }, 200);
+      
       // Update UI state
-      elements.previewStatus.textContent = 'Preview rendered successfully';
-      elements.previewStatus.className = 'flex items-center gap-1.5 text-emerald-400';
+      elements.previewStatus.textContent = 'Preview rendered • 98/100 quality score';
+      elements.previewStatus.className = 'flex items-center gap-2 text-emerald-400 font-medium';
       elements.copyCodeBtn.disabled = false;
       elements.openNewTabBtn.disabled = false;
       
-      addToast('Preview generated successfully!', 'success');
+      // Show quality audit badge
+      elements.auditBadge.classList.remove('hidden');
+      elements.auditScore.textContent = '98';
+      
+      addToast('✨ Premium preview generated successfully!', 'success');
     }
     
-    // ===== BUILD ENGINE CORE =====
-    async function runBuildSequence(userPrompt) {
-      // Show panels
+    // ===== ELITE BUILD ENGINE CORE =====
+    async function runEliteBuildSequence(userPrompt) {
+      // Show panels with animation
       elements.buildPanel.classList.remove('hidden');
       elements.blueprintPanel.classList.remove('hidden');
       
-      // Generate blueprint first
-      generateBlueprint();
+      // Animate panel entrance
+      [elements.buildPanel, elements.blueprintPanel].forEach((panel, i) => {
+        panel.style.opacity = '0';
+        panel.style.transform = 'translateY(24px)';
+        setTimeout(() => {
+          panel.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          panel.style.opacity = '1';
+          panel.style.transform = 'translateY(0)';
+        }, 150 + (i * 100));
+      });
+      
+      // Generate blueprint table FIRST (before build stages)
+      generateBlueprintTable();
       
       // Initialize build state
       let totalLines = 0;
       let currentProgress = 0;
       
-      // Execute 7-stage build loop
+      // Execute 7-stage elite build loop with premium animations
       for (const stage of AURA_CONFIG.BUILD_STAGES) {
-        // Update UI for stage start
+        // Update UI for stage start with smooth transition
         elements.stageTitle.textContent = `Stage ${stage.id}: ${stage.name}`;
         elements.stageDesc.textContent = stage.desc;
         updateStageIndicator(stage.id, 'active');
-        addLogEntry(`Starting stage ${stage.id}: ${stage.name}`, 'info');
+        addLogEntry(`▶ Initiating stage ${stage.id}: ${stage.name}`, 'process');
         
-        // Simulate processing with incremental updates
-        const linesForStage = Math.floor(Math.random() * 40) + 160; // 160-200 lines per stage
-        const increments = 8;
+        // Simulate elite processing: 200 lines per stage with quality audit animation
+        const linesForStage = 200; // Fixed 200 lines as requested
+        const increments = 10; // More increments for smoother animation
         const linesPerIncrement = Math.floor(linesForStage / increments);
         
         for (let i = 1; i <= increments; i++) {
-          // Update progress
-          currentProgress = Math.min(100, Math.floor((stage.id - 1) * (100/7) + (i/increments) * (100/7)));
+          // Update progress with easing
+          const stageProgress = ((stage.id - 1) * (100/7)) + ((i/increments) * (100/7));
+          currentProgress = Math.min(100, Math.floor(stageProgress));
           elements.progressFill.style.width = `${currentProgress}%`;
           elements.progressPercent.textContent = `${currentProgress}%`;
           
-          // Update code preview
+          // Update code preview with realistic snippets
           totalLines += linesPerIncrement;
           updateCodePreview(stage.id, totalLines);
           
-          // Add log entries at key points
-          if (i === 1) addLogEntry(`Processing ${linesForStage} lines for ${stage.name}...`, 'info');
-          if (i === Math.floor(increments/2)) addLogEntry(`✓ Core ${stage.name.toLowerCase()} logic compiled`, 'success');
-          if (i === increments) addLogEntry(`Stage ${stage.id} complete • ${totalLines} total lines`, 'success');
+          // Add strategic log entries
+          if (i === 1) {
+            addLogEntry(`⚙️ Processing ${linesForStage} lines of elite code for ${stage.name}...`, 'info');
+          }
+          if (i === Math.floor(increments/2)) {
+            addLogEntry(`✓ Core ${stage.name.toLowerCase()} logic compiled • Optimizing...`, 'success');
+          }
+          if (i === increments) {
+            addLogEntry(`✅ Stage ${stage.id} complete • ${totalLines.toLocaleString()} total lines processed`, 'success');
+          }
           
-          // Simulate async processing
-          await new Promise(resolve => setTimeout(resolve, 350 + Math.random() * 200));
+          // Premium delay simulation with slight variation for realism
+          await new Promise(resolve => setTimeout(resolve, 280 + Math.random() * 120));
         }
         
-        // Mark stage as completed
+        // Special handling for Quality Audit stage (stage 6)
+        if (stage.id === 6) {
+          addLogEntry('🔍 Running comprehensive quality audit suite...', 'process');
+          await new Promise(resolve => setTimeout(resolve, 600));
+          addLogEntry('✓ Accessibility scan: 98/100 (WCAG 2.1 AA)', 'success');
+          await new Promise(resolve => setTimeout(resolve, 400));
+          addLogEntry('✓ Performance audit: 97/100 (Lighthouse)', 'success');
+          await new Promise(resolve => setTimeout(resolve, 400));
+          addLogEntry('✓ Security validation: CSP, XSS, dependencies verified', 'success');
+        }
+        
+        // Mark stage as completed with animation
         updateStageIndicator(stage.id, 'completed');
       }
       
-      // Finalize
+      // Finalize with premium flourish
       elements.progressFill.style.width = '100%';
       elements.progressPercent.textContent = '100%';
-      elements.stageTitle.textContent = 'Build Complete';
-      elements.stageDesc.textContent = 'Your production-ready code is ready';
-      addLogEntry('✓ All stages completed successfully', 'success');
-      addLogEntry('✓ Bundle size: 87.3KB (gzipped)', 'success');
-      addLogEntry('✓ Lighthouse score: 98/100', 'success');
+      elements.stageTitle.textContent = '✨ Build Complete';
+      elements.stageDesc.textContent = 'Production-ready code compiled with elite quality standards';
+      addLogEntry('🎉 All 7 stages completed successfully', 'success');
+      addLogEntry('📦 Final bundle: 87.3KB gzipped • Tree-shaking: 42% reduction', 'success');
+      addLogEntry('🚀 Ready for deployment • Session ID: ' + Math.random().toString(36).substr(2, 9).toUpperCase(), 'success');
       
-      // Render preview after short delay
+      // Render premium preview after elegant delay
       setTimeout(() => {
-        renderPreview();
-        addMessage(`✨ <strong>Generation complete!</strong> Your project has been built with ${totalLines} lines of optimized code. The preview is ready on the right.`, false);
-      }, 800);
+        renderPremiumPreview();
+        addMessage(`✨ <strong>Elite generation complete!</strong> Your project has been built with <span class="text-gradient">${totalLines.toLocaleString()}</span> lines of optimized, accessible, production-ready code. The premium preview is ready on the right.`, false);
+      }, 900);
     }
     
-    // ===== EVENT LISTENERS =====
+    // ===== PREMIUM EVENT LISTENERS =====
     elements.promptForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const prompt = elements.promptInput.value.trim();
       
       if (!prompt) {
-        addToast('Please enter a project description', 'error');
+        addToast('Please describe your project vision', 'error');
+        elements.promptInput.focus();
         return;
       }
       
-      // Disable input during generation
+      // Disable input during elite generation sequence
       elements.promptInput.disabled = true;
       elements.generateBtn.disabled = true;
-      elements.generateBtn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Generating...';
+      elements.generateBtn.innerHTML = '<i data-lucide="loader" class="w-4.5 h-4.5 animate-spin"></i> <span>Generating...</span>';
       lucide.createIcons();
       
-      // Add user message
+      // Add user message with animation
       addMessage(prompt, true);
       elements.promptInput.value = '';
       
-      // Show AI thinking indicator
+      // Show premium AI thinking indicator
       const thinkingId = 'thinking-' + Date.now();
       const thinkingDiv = document.createElement('div');
       thinkingDiv.id = thinkingId;
-      thinkingDiv.className = 'message-ai rounded-2xl p-4 max-w-[95%]';
+      thinkingDiv.className = 'message-ai rounded-2xl p-5 max-w-[96%]';
       thinkingDiv.innerHTML = `
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="sparkles" class="w-4 h-4 text-aura-900"></i>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-aura-400 to-aura-300 flex items-center justify-center flex-shrink-0 shadow-lg shadow-aura-500/30">
+            <i data-lucide="sparkles" class="w-5 h-5 text-aura-950"></i>
           </div>
           <div>
-            <div class="loading-dots flex items-center gap-1">
+            <div class="loading-dots flex items-center gap-1.5 mb-3">
               <span></span><span></span><span></span>
             </div>
-            <p class="text-xs text-aura-400 mt-2">Analyzing requirements...</p>
+            <p class="text-xs text-aura-200/80 font-medium">Analyzing requirements with elite NLP engine...</p>
+            <div class="mt-3 flex gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-aura-700/50 text-xs text-aura-150">Intent Detection</span>
+              <span class="px-2.5 py-1 rounded-lg bg-aura-700/50 text-xs text-aura-150">Scope Validation</span>
+              <span class="px-2.5 py-1 rounded-lg bg-aura-700/50 text-xs text-aura-150">Blueprint Planning</span>
+            </div>
           </div>
         </div>
       `;
@@ -1045,95 +1767,154 @@
       elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
       lucide.createIcons();
       
-      // Simulate AI processing delay
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      // Simulate elite AI processing delay
+      await new Promise(resolve => setTimeout(resolve, 1400));
       
-      // Remove thinking indicator
-      document.getElementById(thinkingId)?.remove();
+      // Remove thinking indicator with fade
+      document.getElementById(thinkingId)?.style.transition = 'opacity 0.3s ease';
+      document.getElementById(thinkingId)?.style.opacity = '0';
+      setTimeout(() => document.getElementById(thinkingId)?.remove(), 300);
       
-      // Add AI response with blueprint preview
-      addMessage(`🔍 <strong>Blueprint generated!</strong> I've created a technical roadmap with 10 critical requirements for your project. The Deep Build Engine is now executing the 7-stage compilation process...`, false);
+      // Add premium AI response with blueprint preview
+      addMessage(`🔍 <strong>Elite blueprint generated!</strong> I've created a comprehensive technical roadmap with 10 critical requirements. The <span class="font-semibold text-gradient">Deep Build Engine</span> is now executing the 7-stage elite compilation process with real-time quality auditing...`, false);
       
-      // Start the build sequence
-      await runBuildSequence(prompt);
+      // Start the elite build sequence
+      await runEliteBuildSequence(prompt);
       
-      // Re-enable input
+      // Re-enable input with smooth transition
       elements.promptInput.disabled = false;
       elements.generateBtn.disabled = false;
-      elements.generateBtn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> <span>Generate</span>';
+      elements.generateBtn.innerHTML = '<i data-lucide="send" class="w-4.5 h-4.5"></i> <span>Generate</span>';
       lucide.createIcons();
       
-      // Focus input for next prompt
+      // Focus input for next prompt with subtle animation
       elements.promptInput.focus();
+      elements.promptInput.parentElement.style.boxShadow = '0 0 0 3px rgba(125, 103, 209, 0.3)';
+      setTimeout(() => {
+        elements.promptInput.parentElement.style.transition = 'box-shadow 0.3s ease';
+        elements.promptInput.parentElement.style.boxShadow = 'none';
+      }, 1200);
     });
     
-    // Copy code button handler
+    // Copy code button handler with premium feedback
     elements.copyCodeBtn.addEventListener('click', () => {
       const code = elements.codePreview.textContent;
       navigator.clipboard.writeText(code).then(() => {
-        addToast('Code copied to clipboard!', 'success');
+        addToast('✨ Source code copied to clipboard!', 'success');
+        // Visual feedback on button
+        const originalIcon = elements.copyCodeBtn.innerHTML;
+        elements.copyCodeBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
+        lucide.createIcons();
+        setTimeout(() => {
+          elements.copyCodeBtn.innerHTML = originalIcon;
+          lucide.createIcons();
+        }, 2000);
       }).catch(() => {
         addToast('Failed to copy code', 'error');
       });
     });
     
-    // Open in new tab handler
+    // Open in new tab handler with blob URL
     elements.openNewTabBtn.addEventListener('click', () => {
       const previewContent = elements.previewFrame.contentDocument.documentElement.outerHTML;
       const blob = new Blob([previewContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-      addToast('Opened preview in new tab', 'info');
+      const newWindow = window.open(url, '_blank');
       
-      // Cleanup object URL after 1 minute
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
-    });
-    
-    // Initialize Lucide icons on load
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      
-      // Add subtle entrance animation to main panels
-      document.querySelectorAll('.glass-intense').forEach((el, i) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(12px)';
-        setTimeout(() => {
-          el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 200 + (i * 100));
-      });
-      
-      // Show welcome toast
-      setTimeout(() => {
-        addToast('Welcome to Aura.ai • Ready to generate', 'info');
-      }, 800);
-    });
-    
-    // Handle window resize for responsive preview
-    window.addEventListener('resize', () => {
-      // Could add preview viewport adjustment logic here
-    });
-    
-    // Keyboard shortcut: Ctrl+Enter to submit
-    elements.promptInput.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.key === 'Enter') {
-        elements.promptForm.requestSubmit();
+      if (newWindow) {
+        addToast('✨ Opened premium preview in new tab', 'info');
+        // Cleanup object URL after 2 minutes
+        setTimeout(() => URL.revokeObjectURL(url), 120000);
+      } else {
+        addToast('Popup blocked • Please allow popups for full preview', 'error');
       }
     });
     
-    // Prevent drag/selection on UI elements for app-like feel
-    document.querySelectorAll('.btn-primary, .btn-secondary, .checklist-item').forEach(el => {
-      el.addEventListener('dragstart', e => e.preventDefault());
-      el.addEventListener('selectstart', e => e.preventDefault());
+    // ===== PREMIUM INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Lucide icons with premium loading
+      lucide.createIcons();
+      
+      // Add staggered entrance animations to main panels
+      document.querySelectorAll('.glass-intense').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 200 + (i * 120));
+      });
+      
+      // Show premium welcome toast sequence
+      setTimeout(() => addToast('✨ Welcome to Aura.ai Elite Engine', 'info'), 600);
+      setTimeout(() => addToast('🎨 Premium Dark Mode • Glassmorphism UI', 'info'), 1400);
+      setTimeout(() => addToast('⚡ Ready to generate production-ready code', 'success'), 2200);
+      
+      // Add subtle hover effects to interactive elements
+      document.querySelectorAll('.btn-primary, .btn-secondary, .checklist-item, .roadmap-table tr').forEach(el => {
+        el.addEventListener('mouseenter', function() {
+          this.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+      });
+      
+      // Keyboard shortcut: Ctrl+Enter or Cmd+Enter to submit
+      elements.promptInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          elements.promptForm.requestSubmit();
+        }
+      });
+      
+      // Prevent drag/selection on UI elements for app-like premium feel
+      document.querySelectorAll('.btn-primary, .btn-secondary, .checklist-item, .stage-dot').forEach(el => {
+        el.addEventListener('dragstart', e => e.preventDefault());
+        el.addEventListener('selectstart', e => e.preventDefault());
+        el.style.userSelect = 'none';
+        el.style.webkitUserSelect = 'none';
+      });
+      
+      // Handle window resize for responsive preview adjustments
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          // Could add preview viewport adjustment logic here
+          if (window.innerWidth < 1200) {
+            document.querySelectorAll('.stage-label').forEach(el => el.style.display = 'none');
+          } else {
+            document.querySelectorAll('.stage-label').forEach(el => el.style.display = 'block');
+          }
+        }, 150);
+      });
+    });
+    
+    // ===== PREMIUM ERROR HANDLING =====
+    window.addEventListener('error', (e) => {
+      console.error('Aura.ai Elite Engine Error:', e);
+      addToast('⚠️ An unexpected error occurred • Refresh to continue', 'error');
+      // Re-enable UI if stuck
+      elements.promptInput.disabled = false;
+      elements.generateBtn.disabled = false;
+      elements.generateBtn.innerHTML = '<i data-lucide="send" class="w-4.5 h-4.5"></i> <span>Generate</span>';
+      lucide.createIcons();
+    });
+    
+    // Handle page visibility changes to pause/resume animations if needed
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Could pause intensive animations when tab is hidden
+        console.log('Aura.ai: Tab hidden • Animations optimized');
+      }
     });
   </script>
   
-  <!-- ===== FOOTER CREDITS (Subtle) ===== -->
-  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40">
-    <div class="glass rounded-full px-4 py-1.5 flex items-center gap-2 text-xs text-aura-300/80">
-      <i data-lucide="shield" class="w-3 h-3"></i>
-      <span>Aura.ai Engine v2.4.1 • Single-File MVP • All processing simulated client-side</span>
+  <!-- ===== PREMIUM FOOTER CREDITS ===== -->
+  <div class="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+    <div class="glass rounded-2xl px-5 py-2.5 flex items-center gap-3 text-xs text-aura-200/85 border border-aura-600/40">
+      <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <span>Aura.ai Elite Engine v3.2.1 • Single-File MVP • Premium Simulation Mode • All processing client-side</span>
+      <span class="px-2 py-0.5 rounded-full bg-aura-600/50 text-aura-100 font-semibold">PRO</span>
     </div>
   </div>
 </body>
