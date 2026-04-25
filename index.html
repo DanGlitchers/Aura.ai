@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS v3.0 | TACTICAL SCAM INTELLIGENCE</title>
+    <title>JARVIS v3.5 | STARK INDUSTRIES</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@200;400;700&display=swap');
-        :root { --neon: #00f2ff; --deep-blue: #001a2c; --danger: #ff0055; --border: rgba(0, 242, 255, 0.4); }
+        :root { --neon: #00f2ff; --border: rgba(0, 242, 255, 0.4); }
         body { background-color: #01050a; color: #fff; font-family: 'Assistant', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; }
-        header { height: 70px; border-bottom: 2px solid var(--neon); background: rgba(0, 10, 20, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); z-index: 100; }
+        header { height: 70px; border-bottom: 2px solid var(--neon); background: rgba(0, 10, 20, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
         header h1 { font-family: 'Orbitron', sans-serif; margin: 0; font-size: 24px; letter-spacing: 6px; color: var(--neon); text-shadow: 0 0 15px var(--neon); }
-        .system-status { font-family: 'Orbitron', sans-serif; font-size: 12px; display: flex; gap: 30px; color: var(--neon); }
-        main { display: grid; grid-template-columns: 450px 1fr; gap: 25px; padding: 25px; flex: 1; z-index: 10; }
-        .panel { background: rgba(0, 20, 40, 0.6); border: 1px solid var(--border); border-radius: 2px; display: flex; flex-direction: column; backdrop-filter: blur(15px); position: relative; }
-        .panel-header { padding: 12px 20px; background: rgba(0, 242, 255, 0.1); border-bottom: 1px solid var(--border); font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon); display: flex; justify-content: space-between; }
-        textarea { flex: 1; background: transparent; border: none; color: #fff; padding: 25px; font-size: 17px; outline: none; resize: none; line-height: 1.6; }
-        .btn-main { width: 100%; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 18px; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.4s; letter-spacing: 3px; }
-        .btn-main:hover { background: var(--neon); color: #000; box-shadow: 0 0 40px var(--neon); }
-        #reportDisplay { padding: 40px; overflow-y: auto; font-size: 19px; line-height: 1.9; color: #c9eef2; height: 100%; }
-        #reportDisplay strong { color: var(--neon); display: block; margin-top: 15px; }
+        main { display: grid; grid-template-columns: 400px 1fr; gap: 20px; padding: 20px; flex: 1; }
+        .panel { background: rgba(0, 20, 40, 0.6); border: 1px solid var(--border); display: flex; flex-direction: column; backdrop-filter: blur(15px); position: relative; }
+        .panel-header { padding: 10px 20px; background: rgba(0, 242, 255, 0.1); border-bottom: 1px solid var(--border); font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon); }
+        textarea { flex: 1; background: transparent; border: none; color: #fff; padding: 20px; font-size: 16px; outline: none; resize: none; }
+        .btn-main { width: 100%; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 15px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; letter-spacing: 2px; }
+        .btn-main:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+        #reportDisplay { padding: 30px; overflow-y: auto; font-size: 18px; line-height: 1.7; color: #c9eef2; }
         #loader { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        .scanner-box { width: 80px; height: 80px; border: 2px solid var(--neon); animation: rotate 2s linear infinite; }
+        .spinner { width: 50px; height: 50px; border: 3px solid var(--neon); border-top-color: transparent; border-radius: 50%; animation: rotate 1s linear infinite; }
         @keyframes rotate { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -28,88 +26,55 @@
 
 <header>
     <h1>JARVIS v3.5</h1>
-    <div class="system-status">
-        <div>STATUS: <span id="status">READY</span></div>
-        <div id="clock">00:00:00</div>
-    </div>
+    <div style="font-family:'Orbitron'; color:var(--neon); font-size:12px;">SYSTEM: ONLINE | <span id="clock">00:00:00</span></div>
 </header>
 
 <main>
     <div class="panel">
-        <div class="panel-header"><span>INPUT MODULE</span></div>
-        <textarea id="scamInput" placeholder="הדבק כאן נתוני עוקץ..."></textarea>
-        <div style="padding:20px;">
-            <button class="btn-main" onclick="executeScan()">EXECUTE SCAN</button>
-        </div>
+        <div class="panel-header">DATA INPUT</div>
+        <textarea id="scamInput" placeholder="הכנס נתוני עוקץ..."></textarea>
+        <div style="padding:15px;"><button class="btn-main" onclick="executeScan()">EXECUTE SCAN</button></div>
     </div>
-
     <div class="panel">
-        <div class="panel-header"><span>TACTICAL REPORT</span></div>
-        <div id="loader"><div class="scanner-box"></div><p>PROCESSING...</p></div>
-        <div id="reportDisplay">ממתין להוראות, אדוני.</div>
+        <div class="panel-header">INTELLIGENCE REPORT</div>
+        <div id="loader"><div class="spinner"></div><p style="color:var(--neon); font-family:'Orbitron';">ANALYZING...</p></div>
+        <div id="reportDisplay">אדוני, המערכת מוכנה לסריקה.</div>
     </div>
 </main>
 
 <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // ==========================================
-    // שים את ה-KEY שלך כאן למטה:
-    // ==========================================
-    const YOUR_API_KEY = "AIzaSyBthMOntEM4JBoN_YzuhQk5uSas5YWntlg"; 
-    // ==========================================
-
-    const genAI = new GoogleGenerativeAI(YOUR_API_KEY);
+    // המפתח החדש שלך הוטמע במערכת
+    const API_KEY = "AIzaSyBthMOntEM4JBoN_YzuhQk5uSas5YWntlg"; 
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
     window.executeScan = async function() {
         const input = document.getElementById('scamInput').value;
         const output = document.getElementById('reportDisplay');
         const loader = document.getElementById('loader');
-        const status = document.getElementById('status');
 
         if (!input.trim()) return;
-
         output.style.opacity = "0.1";
         loader.style.display = "block";
-        status.innerText = "SCANNING...";
 
         try {
-            // ניסיון ראשון עם המודל הכי עדכני
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const prompt = `אתה JARVIS. נתח את ניסיון העוקץ הבא בעברית טכנית ומקצועית: "${input}". חלק ל: סוג איום, פרטים שחולצו, ופרוטוקול תגובה נגדית.`;
             
-            const prompt = `אתה JARVIS. נתח את העוקץ הבא בעברית: "${input}". 
-            חלק ל: אפיון איום, פרטים מזהים, ושיטת תגובה נגדית. דבר כמו ג'רוויס.`;
-
             const result = await model.generateContent(prompt);
             const response = await result.response;
-            const text = response.text().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-
+            
             loader.style.display = "none";
             output.style.opacity = "1";
-            status.innerText = "COMPLETED";
-            
-            output.innerHTML = text;
-
+            output.innerHTML = response.text().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         } catch (error) {
-            console.error(error);
-            // אם המודל הראשון נכשל, ננסה את המודל היציב הישן
-            try {
-                const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
-                const result = await fallbackModel.generateContent("נתח בקצרה: " + input);
-                const response = await result.response;
-                output.innerHTML = response.text().replace(/\n/g, '<br>');
-                loader.style.display = "none";
-                output.style.opacity = "1";
-            } catch (err2) {
-                loader.style.display = "none";
-                output.style.opacity = "1";
-                output.innerHTML = `<span style="color:red;">שגיאת מערכת סופית:</span> אדוני, ה-API Key שלך לא מוגדר נכון ב-Google Cloud. וודא שביטלת את המפתח הקודם ויצרת חדש ב-AI Studio.`;
-            }
+            loader.style.display = "none";
+            output.style.opacity = "1";
+            output.innerHTML = "שגיאת מערכת: " + error.message;
         }
     }
-
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
-
 </body>
 </html>
