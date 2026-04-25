@@ -3,78 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS v3.5 | STARK INDUSTRIES</title>
+    <title>JARVIS OS | STARK INDUSTRIES</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@200;400;700&display=swap');
-        :root { --neon: #00f2ff; --border: rgba(0, 242, 255, 0.4); }
-        body { background-color: #01050a; color: #fff; font-family: 'Assistant', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; }
-        header { height: 70px; border-bottom: 2px solid var(--neon); background: rgba(0, 10, 20, 0.9); display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
-        header h1 { font-family: 'Orbitron', sans-serif; margin: 0; font-size: 24px; letter-spacing: 6px; color: var(--neon); text-shadow: 0 0 15px var(--neon); }
-        main { display: grid; grid-template-columns: 400px 1fr; gap: 20px; padding: 20px; flex: 1; }
-        .panel { background: rgba(0, 20, 40, 0.6); border: 1px solid var(--border); display: flex; flex-direction: column; backdrop-filter: blur(15px); position: relative; }
-        .panel-header { padding: 10px 20px; background: rgba(0, 242, 255, 0.1); border-bottom: 1px solid var(--border); font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon); }
-        textarea { flex: 1; background: transparent; border: none; color: #fff; padding: 20px; font-size: 16px; outline: none; resize: none; }
-        .btn-main { width: 100%; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 15px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; letter-spacing: 2px; }
-        .btn-main:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
-        #reportDisplay { padding: 30px; overflow-y: auto; font-size: 18px; line-height: 1.7; color: #c9eef2; }
-        #loader { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        .spinner { width: 50px; height: 50px; border: 3px solid var(--neon); border-top-color: transparent; border-radius: 50%; animation: rotate 1s linear infinite; }
-        @keyframes rotate { to { transform: rotate(360deg); } }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@300;600&display=swap');
+        :root { --neon: #00f2ff; --bg: #010810; --panel: rgba(0, 30, 50, 0.4); }
+        body { background-color: var(--bg); color: #fff; font-family: 'Assistant', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background-image: linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; }
+        header { padding: 15px 40px; border-bottom: 2px solid var(--neon); background: rgba(1, 10, 20, 0.9); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        header h1 { font-family: 'Orbitron', sans-serif; margin: 0; letter-spacing: 4px; color: var(--neon); font-size: 20px; }
+        main { display: grid; grid-template-columns: 400px 1fr; gap: 20px; padding: 25px; flex: 1; overflow: hidden; }
+        .panel { background: var(--panel); border: 1px solid var(--neon); border-radius: 4px; display: flex; flex-direction: column; backdrop-filter: blur(10px); position: relative; }
+        .panel-header { background: rgba(0, 242, 255, 0.1); padding: 8px 15px; font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon); border-bottom: 1px solid var(--neon); }
+        textarea { flex: 1; background: transparent; border: none; color: #fff; padding: 20px; font-size: 16px; outline: none; resize: none; font-family: 'Assistant', sans-serif; }
+        .btn-run { width: calc(100% - 30px); margin: 15px; background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: 0.3s; }
+        .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+        #output { padding: 30px; overflow-y: auto; font-size: 18px; line-height: 1.7; color: #c9eef2; }
+        #loader { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--neon); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>JARVIS v3.5</h1>
-    <div style="font-family:'Orbitron'; color:var(--neon); font-size:12px;">SYSTEM: ONLINE | <span id="clock">00:00:00</span></div>
+    <h1>JARVIS CORE | STARK ENTERPRISES</h1>
+    <div style="font-family:'Orbitron'; color:var(--neon); font-size:12px;" id="clock">00:00:00</div>
 </header>
 
 <main>
     <div class="panel">
-        <div class="panel-header">DATA INPUT</div>
-        <textarea id="scamInput" placeholder="הכנס נתוני עוקץ..."></textarea>
-        <div style="padding:15px;"><button class="btn-main" onclick="executeScan()">EXECUTE SCAN</button></div>
+        <div class="panel-header">INPUT STREAM</div>
+        <textarea id="input" placeholder="הזן נתונים לניתוח מודיעיני..."></textarea>
+        <button class="btn-run" onclick="runAnalysis()">RUN SYSTEM SCAN</button>
     </div>
     <div class="panel">
-        <div class="panel-header">INTELLIGENCE REPORT</div>
-        <div id="loader"><div class="spinner"></div><p style="color:var(--neon); font-family:'Orbitron';">ANALYZING...</p></div>
-        <div id="reportDisplay">אדוני, המערכת מוכנה לסריקה.</div>
+        <div class="panel-header">TERMINAL OUTPUT</div>
+        <div id="loader"><div class="spinner"></div></div>
+        <div id="output">מערכת מוכנה. ממתין לקלט.</div>
     </div>
 </main>
 
 <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // המפתח החדש שלך הוטמע במערכת
-    const API_KEY = "AIzaSyBthMOntEM4JBoN_YzuhQk5uSas5YWntlg"; 
+    // המפתח שהגדרנו
+    const API_KEY = "AIzaSyBthMOntEM4JBoN_YzuhQk5uSas5YWntlg";
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    window.executeScan = async function() {
-        const input = document.getElementById('scamInput').value;
-        const output = document.getElementById('reportDisplay');
+    window.runAnalysis = async function() {
+        const text = document.getElementById('input').value;
+        const out = document.getElementById('output');
         const loader = document.getElementById('loader');
 
-        if (!input.trim()) return;
-        output.style.opacity = "0.1";
+        if (!text.trim()) return;
+
+        out.style.opacity = "0.2";
         loader.style.display = "block";
 
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const prompt = `אתה JARVIS. נתח את ניסיון העוקץ הבא בעברית טכנית ומקצועית: "${input}". חלק ל: סוג איום, פרטים שחולצו, ופרוטוקול תגובה נגדית.`;
+            // שימוש במודל gemini-pro - המודל הכי יציב וותיק
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             
+            const prompt = `נתח את ניסיון העוקץ הבא כ-JARVIS: "${text}". פרט בעברית: סוג האיום, פרטים מזהים, ואיך להגיב.`;
+
             const result = await model.generateContent(prompt);
             const response = await result.response;
-            
+            const outputText = response.text();
+
             loader.style.display = "none";
-            output.style.opacity = "1";
-            output.innerHTML = response.text().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        } catch (error) {
+            out.style.opacity = "1";
+            out.innerHTML = outputText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        } catch (e) {
             loader.style.display = "none";
-            output.style.opacity = "1";
-            output.innerHTML = "שגיאת מערכת: " + error.message;
+            out.style.opacity = "1";
+            out.innerHTML = "שגיאת מערכת: " + e.message + "<br><br>אדוני, וודא שהמפתח שלך נוצר ב-AI Studio תחת 'Get API Key'.";
         }
     }
+
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
+
 </body>
 </html>
