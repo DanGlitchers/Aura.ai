@@ -3,171 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS OS - SCAM INTELLIGENCE</title>
+    <title>JARVIS v2.0 - SCAM INTELLIGENCE SYSTEM</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@300;600&display=swap');
 
         :root {
             --cyan: #00f2ff;
             --blue: #0062ff;
-            --dark: #020b16;
-            --glass: rgba(0, 242, 255, 0.05);
-            --border: rgba(0, 242, 255, 0.3);
+            --dark-bg: #010a14;
+            --panel-bg: rgba(0, 30, 50, 0.4);
+            --glow: 0 0 15px rgba(0, 242, 255, 0.4);
         }
 
         body {
-            background-color: var(--dark);
+            background-color: var(--dark-bg);
             background-image: 
-                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: white;
+                radial-gradient(circle at 50% 50%, #001a33 0%, #010a14 100%),
+                linear-gradient(rgba(0, 242, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: #e0faff;
             font-family: 'Assistant', sans-serif;
             margin: 0;
-            overflow: hidden;
             height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header HUD */
+        /* Scanline Effect */
+        body::after {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* Top HUD Header */
         header {
-            padding: 20px 40px;
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--border);
-            background: rgba(2, 11, 22, 0.9);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+            border-bottom: 2px solid var(--cyan);
+            background: rgba(1, 10, 20, 0.85);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
             z-index: 10;
         }
 
         header h1 {
             font-family: 'Orbitron', sans-serif;
             margin: 0;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             color: var(--cyan);
-            text-shadow: 0 0 10px var(--cyan);
-            font-size: 24px;
+            text-shadow: var(--glow);
+            font-size: 22px;
         }
 
-        .system-stats {
+        .hud-stats {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
+            font-size: 11px;
             color: var(--cyan);
+            text-transform: uppercase;
         }
 
-        /* Layout */
-        .container {
+        /* Main UI Layout */
+        .main-ui {
             display: grid;
-            grid-template-columns: 400px 1fr;
+            grid-template-columns: 450px 1fr;
             gap: 20px;
-            padding: 20px;
+            padding: 25px;
             flex-grow: 1;
             overflow: hidden;
         }
 
         .panel {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 5px;
+            background: var(--panel-bg);
+            border: 1px solid var(--cyan);
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             position: relative;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.05);
         }
 
-        .panel-title {
-            background: var(--border);
-            padding: 8px 15px;
+        .panel-header {
+            background: rgba(0, 242, 255, 0.15);
+            padding: 10px 15px;
             font-family: 'Orbitron', sans-serif;
             font-size: 12px;
-            color: white;
+            color: var(--cyan);
+            border-bottom: 1px solid var(--cyan);
             display: flex;
             justify-content: space-between;
         }
 
-        /* Input Styles */
+        /* Input Area */
         textarea {
             flex-grow: 1;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.4);
             border: none;
-            color: var(--cyan);
+            color: #fff;
             padding: 20px;
             font-size: 16px;
             resize: none;
             outline: none;
-            line-height: 1.5;
+            font-family: 'Assistant', sans-serif;
+            line-height: 1.6;
         }
 
-        .btn-analyze {
+        .action-bar {
+            padding: 15px;
+            border-top: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .btn-execute {
+            width: 100%;
             background: transparent;
             border: 1px solid var(--cyan);
             color: var(--cyan);
             padding: 15px;
             font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
-            margin: 10px;
-            text-transform: uppercase;
+            transition: all 0.3s;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .btn-analyze:hover {
+        .btn-execute:hover {
             background: var(--cyan);
-            color: var(--dark);
-            box-shadow: 0 0 20px var(--cyan);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px var(--cyan);
         }
 
         /* Output Area */
-        .output-container {
+        .report-content {
             padding: 30px;
             overflow-y: auto;
             font-size: 18px;
             line-height: 1.8;
-            color: #e0faff;
+            height: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: var(--cyan) transparent;
         }
 
-        .output-container strong {
+        .report-content::-webkit-scrollbar { width: 5px; }
+        .report-content::-webkit-scrollbar-thumb { background: var(--cyan); }
+
+        .report-content strong {
             color: var(--cyan);
-            text-shadow: 0 0 5px var(--cyan);
+            text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
         }
 
-        /* Loading Animation */
+        /* Loading UI */
         #loader {
             display: none;
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-        }
-
-        .orbit {
-            width: 60px;
-            height: 60px;
-            border: 2px solid var(--cyan);
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Scanned Data Effect */
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 242, 255, 0.3);
-            top: 0;
-            animation: scan 4s linear infinite;
             z-index: 5;
         }
 
-        @keyframes scan {
+        .scanner-ring {
+            width: 80px; height: 80px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--cyan);
+            border-bottom: 3px solid var(--cyan);
+            border-radius: 50%;
+            animation: rotate 1.5s linear infinite;
+        }
+
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        /* Scanning Line */
+        .scan-anim {
+            position: absolute;
+            width: 100%; height: 4px;
+            background: rgba(0, 242, 255, 0.4);
+            box-shadow: 0 0 15px var(--cyan);
+            top: 0;
+            animation: scanMove 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanMove {
             0% { top: 0; }
             100% { top: 100%; }
         }
@@ -177,30 +204,38 @@
 <body>
 
 <header>
-    <h1>JARVIS v2.0</h1>
-    <div class="system-stats">
-        <div>CORE: ACTIVE</div>
-        <div>THREAT LEVEL: MONITORING</div>
+    <h1>JARVIS | INTELLIGENCE BATTLE-STATION</h1>
+    <div class="hud-stats">
+        <div>STATUS: <span style="color: #0f0;">ONLINE</span></div>
+        <div>ENCRYPTION: AES-256</div>
         <div id="clock">00:00:00</div>
     </div>
 </header>
 
-<div class="container">
+<div class="main-ui">
     <div class="panel">
-        <div class="scan-line"></div>
-        <div class="panel-title"><span>DATA INGESTION</span><span>ID: 884-X</span></div>
-        <textarea id="scamInput" placeholder="הכנס נתוני עוקץ גולמיים... (מספרי טלפון, צילומי מסך מתומללים, לינקים)"></textarea>
-        <button class="btn-analyze" onclick="processData()">Execute Intelligence Scan</button>
+        <div class="scan-anim"></div>
+        <div class="panel-header">
+            <span>DATA INGESTION MODULE</span>
+            <span>SECURE LINK</span>
+        </div>
+        <textarea id="scamInput" placeholder="הכנס נתוני עוקץ (הודעות, טלפונים, לינקים)..."></textarea>
+        <div class="action-bar">
+            <button class="btn-execute" onclick="processScamData()">הפעל סריקה מודיעינית</button>
+        </div>
     </div>
 
     <div class="panel">
-        <div class="panel-title"><span>TACTICAL ANALYSIS REPORT</span><span>STATUS: READY</span></div>
-        <div id="loader">
-            <div class="orbit"></div>
-            <p style="color:var(--cyan); font-family:'Orbitron';">MAPPING SCAM NETWORK...</p>
+        <div class="panel-header">
+            <span>TACTICAL ANALYSIS REPORT</span>
+            <span>AI CORE: GEMINI-PRO</span>
         </div>
-        <div id="reportOutput" class="output-container">
-            ממתין להזנת נתונים... המערכת מוכנה לסריקה.
+        <div id="loader">
+            <div class="scanner-ring"></div>
+            <p style="color: var(--cyan); font-family: 'Orbitron'; margin-top: 15px; letter-spacing: 2px;">ANALYZING THREAT...</p>
+        </div>
+        <div id="reportOutput" class="report-content">
+            ממתין להזנת נתונים, אדוני. המערכת מוכנה לסריקה.
         </div>
     </div>
 </div>
@@ -208,68 +243,78 @@
 <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // ה-API KEY שלך
+    // המפתח שנתת
     const API_KEY = "AIzaSyCAF_ZyCB6oLxSTnJwK7sIcFMeFaRZ8Df8";
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    window.processData = async function() {
-        const text = document.getElementById('scamInput').value;
-        const output = document.getElementById('reportOutput');
+    window.processScamData = async function() {
+        const inputField = document.getElementById('scamInput');
+        const outputField = document.getElementById('reportOutput');
         const loader = document.getElementById('loader');
 
-        if (!text) return;
+        if (!inputField.value.trim()) {
+            alert("אדוני, עליך להזין מידע גולמי לפני שנוכל להתחיל.");
+            return;
+        }
 
-        // HUD Reset
-        output.style.opacity = "0.2";
+        // UI Reset
+        outputField.style.opacity = "0.1";
         loader.style.display = "block";
 
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            // שימוש במודל Gemini-1.5-Pro ליציבות מקסימלית
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
             
             const prompt = `
-                נתח את המידע הבא כ-JARVIS, בינה מלאכותית מתקדמת ללוחמה בסקאמרים:
-                מידע: "${text}"
+                פעל כ-JARVIS, מערכת ה-AI של טוני סטארק.
+                המשימה: ניתוח עמוק של נתוני עוקץ (Scam) בישראל.
+                נתונים: "${inputField.value}"
                 
-                ענה בפורמט הבא (בעברית):
-                1. **אפיון איום:** (מה העוקץ ואיך הוא עובד?)
-                2. **חילוץ ישויות:** (טלפונים, שמות, כתובות או לינקים שמצאת)
-                3. **פרצות במערכת הנוכל:** (איפה הם טעו או מה חלש אצלם)
-                4. **פרוטוקול תגובה:** (איך לבזבז להם את הזמן הכי הרבה זמן או לחשוף אותם)
+                ענה בעברית מקצועית וטכנית בפורמט הבא:
+                1. **אפיון איום:** (סוג העוקץ ורמת סכנה)
+                2. **חילוץ ישויות:** (מספרי טלפון, לינקים, שמות שזוהו)
+                3. **ניתוח טקטי:** (איך הם מנסים לרמות ומה המטרה שלהם)
+                4. **פרוטוקול תגובה נגדית:** (איך Scambaiter יכול לבזבז להם זמן או לחשוף אותם)
                 
-                תשתמש בשפה צבאית-טכנולוגית ("אדוני", "מערכות מזוהות", "פרוטוקול").
+                דבר כמו ג'רוויס ("אדוני", "זוהה איום", "מעבד נתונים").
             `;
 
             const result = await model.generateContent(prompt);
             const response = await result.response;
-            const formattedText = response.text()
+            const rawText = response.text();
+
+            // Formatting Markdown to HTML
+            const formattedText = rawText
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
 
             loader.style.display = "none";
-            output.style.opacity = "1";
+            outputField.style.opacity = "1";
             
-            // Typewriter effect
-            let i = 0;
-            output.innerHTML = "";
-            const interval = setInterval(() => {
-                output.innerHTML = formattedText.substring(0, i);
-                i += 5; // מהירות הכתיבה
-                if (i >= formattedText.length) {
-                    output.innerHTML = formattedText;
-                    clearInterval(interval);
+            // Typewriter Effect
+            let charIndex = 0;
+            outputField.innerHTML = "";
+            const typingInterval = setInterval(() => {
+                outputField.innerHTML = formattedText.substring(0, charIndex);
+                charIndex += 4;
+                if (charIndex >= formattedText.length) {
+                    outputField.innerHTML = formattedText;
+                    clearInterval(typingInterval);
                 }
-            }, 10);
+            }, 5);
 
         } catch (error) {
+            console.error(error);
             loader.style.display = "none";
-            output.style.opacity = "1";
-            output.innerHTML = "שגיאת מערכת: " + error.message;
+            outputField.style.opacity = "1";
+            outputField.innerHTML = `<span style="color:#ff4b4b;">CRITICAL ERROR:</span> <br> ${error.message}`;
         }
     }
 
-    // Clock function
+    // HUD Clock Update
     setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        const time = new Date();
+        document.getElementById('clock').innerText = time.toTimeString().split(' ')[0];
     }, 1000);
 </script>
 
