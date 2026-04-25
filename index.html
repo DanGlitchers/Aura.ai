@@ -3,200 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS v2.0 - SCAM INTELLIGENCE SYSTEM</title>
+    <title>JARVIS v3.0 | TACTICAL SCAM INTELLIGENCE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@300;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@200;400;700&display=swap');
 
         :root {
-            --cyan: #00f2ff;
-            --blue: #0062ff;
-            --dark-bg: #010a14;
-            --panel-bg: rgba(0, 30, 50, 0.4);
-            --glow: 0 0 15px rgba(0, 242, 255, 0.4);
+            --neon: #00f2ff;
+            --deep-blue: #001a2c;
+            --danger: #ff0055;
+            --glass: rgba(0, 242, 255, 0.03);
+            --border: rgba(0, 242, 255, 0.4);
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            background-color: var(--dark-bg);
-            background-image: 
-                radial-gradient(circle at 50% 50%, #001a33 0%, #010a14 100%),
-                linear-gradient(rgba(0, 242, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            color: #e0faff;
+            background-color: #01050a;
+            color: #fff;
             font-family: 'Assistant', sans-serif;
             margin: 0;
             height: 100vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            /* Background Grid */
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            perspective: 1000px;
         }
 
-        /* Scanline Effect */
-        body::after {
+        /* Overlay CRT Effect */
+        body::before {
             content: " ";
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            z-index: 100;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            background-size: 100% 2px;
+            z-index: 1000;
             pointer-events: none;
+            opacity: 0.3;
         }
 
-        /* Top HUD Header */
+        /* Header HUD */
         header {
-            padding: 15px 40px;
+            height: 70px;
+            border-bottom: 2px solid var(--neon);
+            background: rgba(0, 10, 20, 0.9);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--cyan);
-            background: rgba(1, 10, 20, 0.85);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+            padding: 0 40px;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            z-index: 100;
+        }
+
+        .logo-area h1 {
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 6px;
+            color: var(--neon);
+            text-shadow: 0 0 15px var(--neon);
+        }
+
+        .system-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            display: flex;
+            gap: 30px;
+            color: var(--neon);
+        }
+
+        /* Main Workspace */
+        main {
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            gap: 25px;
+            padding: 25px;
+            flex: 1;
             z-index: 10;
         }
 
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            letter-spacing: 4px;
-            color: var(--cyan);
-            text-shadow: var(--glow);
-            font-size: 22px;
-        }
-
-        .hud-stats {
-            display: flex;
-            gap: 25px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            color: var(--cyan);
-            text-transform: uppercase;
-        }
-
-        /* Main UI Layout */
-        .main-ui {
-            display: grid;
-            grid-template-columns: 450px 1fr;
-            gap: 20px;
-            padding: 25px;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
         .panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--cyan);
-            border-radius: 4px;
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 2px;
             display: flex;
             flex-direction: column;
+            backdrop-filter: blur(15px);
             position: relative;
-            backdrop-filter: blur(12px);
-            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.05);
+            box-shadow: inset 0 0 40px rgba(0, 242, 255, 0.05);
         }
 
         .panel-header {
-            background: rgba(0, 242, 255, 0.15);
-            padding: 10px 15px;
+            padding: 12px 20px;
+            background: rgba(0, 242, 255, 0.1);
+            border-bottom: 1px solid var(--border);
             font-family: 'Orbitron', sans-serif;
             font-size: 12px;
-            color: var(--cyan);
-            border-bottom: 1px solid var(--cyan);
             display: flex;
             justify-content: space-between;
+            color: var(--neon);
         }
 
-        /* Input Area */
+        /* Input Zone */
         textarea {
-            flex-grow: 1;
-            background: rgba(0, 0, 0, 0.4);
+            flex: 1;
+            background: transparent;
             border: none;
             color: #fff;
-            padding: 20px;
-            font-size: 16px;
-            resize: none;
-            outline: none;
+            padding: 25px;
+            font-size: 17px;
             font-family: 'Assistant', sans-serif;
+            outline: none;
+            resize: none;
             line-height: 1.6;
         }
 
-        .action-bar {
-            padding: 15px;
-            border-top: 1px solid rgba(0, 242, 255, 0.2);
+        .action-zone {
+            padding: 20px;
+            border-top: 1px solid var(--border);
         }
 
-        .btn-execute {
+        .btn-main {
             width: 100%;
             background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 15px;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            padding: 18px;
             font-family: 'Orbitron', sans-serif;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            transition: 0.4s;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-execute:hover {
-            background: var(--cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 30px var(--cyan);
+        .btn-main:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 40px var(--neon);
         }
 
-        /* Output Area */
-        .report-content {
-            padding: 30px;
+        /* Output Zone */
+        #reportDisplay {
+            padding: 40px;
             overflow-y: auto;
-            font-size: 18px;
-            line-height: 1.8;
+            font-size: 19px;
+            line-height: 1.9;
+            color: #c9eef2;
             height: 100%;
-            scrollbar-width: thin;
-            scrollbar-color: var(--cyan) transparent;
         }
 
-        .report-content::-webkit-scrollbar { width: 5px; }
-        .report-content::-webkit-scrollbar-thumb { background: var(--cyan); }
-
-        .report-content strong {
-            color: var(--cyan);
-            text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
+        #reportDisplay strong {
+            color: var(--neon);
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.6);
+            display: block;
+            margin-top: 15px;
         }
 
-        /* Loading UI */
+        /* Loading Animation */
         #loader {
             display: none;
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 5;
         }
 
-        .scanner-ring {
-            width: 80px; height: 80px;
-            border: 3px solid transparent;
-            border-top: 3px solid var(--cyan);
-            border-bottom: 3px solid var(--cyan);
-            border-radius: 50%;
-            animation: rotate 1.5s linear infinite;
+        .scanner-box {
+            width: 120px; height: 120px;
+            border: 2px solid var(--neon);
+            position: relative;
+            animation: rotate 4s linear infinite;
+        }
+
+        .scanner-box::before {
+            content: "";
+            position: absolute;
+            top: -10px; left: -10px; width: 20px; height: 20px;
+            border-top: 4px solid var(--neon); border-left: 4px solid var(--neon);
         }
 
         @keyframes rotate { to { transform: rotate(360deg); } }
 
-        /* Scanning Line */
-        .scan-anim {
+        /* HUD Details */
+        .decoration {
             position: absolute;
-            width: 100%; height: 4px;
-            background: rgba(0, 242, 255, 0.4);
-            box-shadow: 0 0 15px var(--cyan);
-            top: 0;
-            animation: scanMove 4s linear infinite;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            color: var(--border);
             pointer-events: none;
-        }
-
-        @keyframes scanMove {
-            0% { top: 0; }
-            100% { top: 100%; }
         }
 
     </style>
@@ -204,117 +204,127 @@
 <body>
 
 <header>
-    <h1>JARVIS | INTELLIGENCE BATTLE-STATION</h1>
-    <div class="hud-stats">
-        <div>STATUS: <span style="color: #0f0;">ONLINE</span></div>
-        <div>ENCRYPTION: AES-256</div>
+    <div class="logo-area">
+        <h1>JARVIS v3.0</h1>
+    </div>
+    <div class="system-status">
+        <div>CORES: ONLINE</div>
+        <div>THREAT LEVEL: <span id="threat">LOW</span></div>
         <div id="clock">00:00:00</div>
     </div>
 </header>
 
-<div class="main-ui">
+<main>
     <div class="panel">
-        <div class="scan-anim"></div>
         <div class="panel-header">
-            <span>DATA INGESTION MODULE</span>
-            <span>SECURE LINK</span>
+            <span>MODI'IN DATA INGEST</span>
+            <span>SECURE-88</span>
         </div>
-        <textarea id="scamInput" placeholder="הכנס נתוני עוקץ (הודעות, טלפונים, לינקים)..."></textarea>
-        <div class="action-bar">
-            <button class="btn-execute" onclick="processScamData()">הפעל סריקה מודיעינית</button>
+        <textarea id="scamInput" placeholder="הדבק כאן מידע גולמי... הודעות עוקץ, תמלול שיחה או לינקים חשודים."></textarea>
+        <div class="action-zone">
+            <button class="btn-main" onclick="executeScan()">EXECUTE SYSTEM SCAN</button>
         </div>
+        <div class="decoration" style="bottom: 5px; right: 10px;">AUTH_REQUIRED</div>
     </div>
 
     <div class="panel">
         <div class="panel-header">
             <span>TACTICAL ANALYSIS REPORT</span>
-            <span>AI CORE: GEMINI-PRO</span>
+            <span>AI CORE: ACTIVATED</span>
         </div>
         <div id="loader">
-            <div class="scanner-ring"></div>
-            <p style="color: var(--cyan); font-family: 'Orbitron'; margin-top: 15px; letter-spacing: 2px;">ANALYZING THREAT...</p>
+            <div class="scanner-box"></div>
+            <p style="color: var(--neon); font-family: 'Orbitron'; margin-top: 20px; letter-spacing: 3px;">MAPPING THREAT...</p>
         </div>
-        <div id="reportOutput" class="report-content">
-            ממתין להזנת נתונים, אדוני. המערכת מוכנה לסריקה.
+        <div id="reportDisplay">
+            ממתין לפקודתך, אדוני. המערכת סרוקה ומוכנה להזנת נתונים.
         </div>
+        <div class="decoration" style="bottom: 5px; left: 10px;">ID_STARK_ENT_992</div>
     </div>
-</div>
+</main>
 
 <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // המפתח שנתת
-    const API_KEY = "AIzaSyCAF_ZyCB6oLxSTnJwK7sIcFMeFaRZ8Df8";
+    // ה-API KEY שלך
+    const API_KEY = "AIzaSyBthMOntEM4JBoN_YzuhQk5uSas5YWntlg";
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    window.processScamData = async function() {
-        const inputField = document.getElementById('scamInput');
-        const outputField = document.getElementById('reportOutput');
+    window.executeScan = async function() {
+        const input = document.getElementById('scamInput').value;
+        const output = document.getElementById('reportDisplay');
         const loader = document.getElementById('loader');
+        const threatText = document.getElementById('threat');
 
-        if (!inputField.value.trim()) {
-            alert("אדוני, עליך להזין מידע גולמי לפני שנוכל להתחיל.");
+        if (!input.trim()) {
+            alert("אדוני, אין נתונים לסריקה.");
             return;
         }
 
-        // UI Reset
-        outputField.style.opacity = "0.1";
+        // HUD Initialization
+        output.style.opacity = "0.05";
         loader.style.display = "block";
+        threatText.innerText = "SCANNING...";
+        threatText.style.color = "yellow";
 
         try {
-            // שימוש במודל Gemini-1.5-Pro ליציבות מקסימלית
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            /* שימוש במודל gemini-1.5-flash-8b - גרסה מהירה במיוחד 
+               שעובדת מעולה בתוך דפדפנים. 
+            */
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             
             const prompt = `
-                פעל כ-JARVIS, מערכת ה-AI של טוני סטארק.
-                המשימה: ניתוח עמוק של נתוני עוקץ (Scam) בישראל.
-                נתונים: "${inputField.value}"
+                משימה: ניתוח עוקץ (Scam) עבור האקר Scambaiter.
+                זהות: אתה JARVIS של טוני סטארק.
+                נתונים: "${input}"
                 
-                ענה בעברית מקצועית וטכנית בפורמט הבא:
-                1. **אפיון איום:** (סוג העוקץ ורמת סכנה)
-                2. **חילוץ ישויות:** (מספרי טלפון, לינקים, שמות שזוהו)
-                3. **ניתוח טקטי:** (איך הם מנסים לרמות ומה המטרה שלהם)
-                4. **פרוטוקול תגובה נגדית:** (איך Scambaiter יכול לבזבז להם זמן או לחשוף אותם)
+                ענה בעברית רשמית וטכנית בפורמט HUD הבא:
+                1. **אפיון המטרה:** (מה העוקץ ומי הקורבן המיועד)
+                2. **ממצאים טכניים:** (טלפונים, כתובות IP, לינקים ופרטים מזהים)
+                3. **ניתוח פרצות:** (מה חלש בשיטה שלהם)
+                4. **פרוטוקול תקיפה נגדית:** (איך לבזבז להם את הזמן בצורה יצירתית)
                 
-                דבר כמו ג'רוויס ("אדוני", "זוהה איום", "מעבד נתונים").
+                דבר כמו ג'רוויס ("אדוני", "ניתוח הושלם", "זיהוי איום").
             `;
 
             const result = await model.generateContent(prompt);
             const response = await result.response;
-            const rawText = response.text();
+            const text = response.text();
 
-            // Formatting Markdown to HTML
-            const formattedText = rawText
+            // Formatting
+            const formatted = text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
 
             loader.style.display = "none";
-            outputField.style.opacity = "1";
-            
-            // Typewriter Effect
+            output.style.opacity = "1";
+            threatText.innerText = "HIGH";
+            threatText.style.color = "#ff0055";
+
+            // Typewriter effect
             let charIndex = 0;
-            outputField.innerHTML = "";
-            const typingInterval = setInterval(() => {
-                outputField.innerHTML = formattedText.substring(0, charIndex);
-                charIndex += 4;
-                if (charIndex >= formattedText.length) {
-                    outputField.innerHTML = formattedText;
-                    clearInterval(typingInterval);
+            output.innerHTML = "";
+            const interval = setInterval(() => {
+                output.innerHTML = formatted.substring(0, charIndex);
+                charIndex += 7;
+                if (charIndex >= formatted.length) {
+                    output.innerHTML = formatted;
+                    clearInterval(interval);
                 }
-            }, 5);
+            }, 10);
 
         } catch (error) {
             console.error(error);
             loader.style.display = "none";
-            outputField.style.opacity = "1";
-            outputField.innerHTML = `<span style="color:#ff4b4b;">CRITICAL ERROR:</span> <br> ${error.message}`;
+            output.style.opacity = "1";
+            output.innerHTML = `<span style="color:var(--danger);">CRITICAL FAILURE:</span> <br> ${error.message}`;
+            threatText.innerText = "ERROR";
         }
     }
 
-    // HUD Clock Update
+    // HUD Clock
     setInterval(() => {
-        const time = new Date();
-        document.getElementById('clock').innerText = time.toTimeString().split(' ')[0];
+        document.getElementById('clock').innerText = new Date().toTimeString().split(' ')[0];
     }, 1000);
 </script>
 
