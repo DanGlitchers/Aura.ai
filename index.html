@@ -1,323 +1,2015 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anon | Discord Clone</title>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        /* איפוס בסיסי ועיצוב גופנים */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Assistant', sans-serif; 
-            background-color: #313338; 
-            color: #dbdee1; 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anon Palace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* סרגל שרתים (הכי ימני) */
-        #servers-sidebar {
-            width: 72px;
-            background-color: #1e1f22;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 12px;
-            gap: 10px;
-        }
-        .server-icon {
-            width: 48px;
-            height: 48px;
-            background-color: #313338;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.2s ease;
-            font-weight: bold;
-            color: #dbdee1;
-        }
-        .server-icon:hover {
-            background-color: #5865f2;
-            border-radius: 16px;
-            color: white;
-        }
-        .server-icon.active { background-color: #5865f2; border-radius: 16px; }
+  :root {
+    --bg-primary: #313338;
+    --bg-secondary: #2b2d31;
+    --bg-tertiary: #1e1f22;
+    --bg-floating: #111214;
+    --accent: #5865f2;
+    --accent-hover: #4752c4;
+    --accent-active: #3c45a5;
+    --text-normal: #dcddde;
+    --text-muted: #96989d;
+    --text-link: #00aff4;
+    --text-positive: #23a55a;
+    --text-danger: #f23f42;
+    --text-warning: #f0b232;
+    --interactive-normal: #b9bbbe;
+    --interactive-hover: #dcddde;
+    --interactive-active: #fff;
+    --channel-default: #96989d;
+    --header-secondary: #2b2d31;
+    --channeltextarea-background: #383a40;
+    --scrollbar-thin-thumb: #1a1b1e;
+    --scrollbar-thin-track: transparent;
+    --border: #3f4147;
+    --shadow: rgba(0,0,0,0.4);
+    --green: #23a55a;
+    --red: #f23f42;
+    --yellow: #f0b232;
+    --mention-bg: rgba(88,101,242,0.1);
+    --mention-border: #5865f2;
+  }
 
-        /* סרגל ערוצים (פנימי) */
-        #channels-sidebar {
-            width: 240px;
-            background-color: #2b2d31;
-            display: flex;
-            flex-direction: column;
-        }
-        .server-header {
-            padding: 16px;
-            font-weight: 800;
-            border-bottom: 1px solid #1f2023;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            color: white;
-        }
-        .channels-list { padding: 10px; flex: 1; }
-        .channel-item {
-            padding: 8px;
-            margin-bottom: 2px;
-            border-radius: 4px;
-            cursor: pointer;
-            color: #949ba4;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .channel-item:hover { background-color: #3f4147; color: #dbdee1; }
-        .channel-item.active { background-color: #404249; color: white; }
-        .hash { font-size: 1.2em; color: #80848e; }
+  html, body { height: 100%; overflow: hidden; }
 
-        /* אזור הגדרות משתמש בתחתית סרגל הערוצים */
-        #user-controls {
-            background-color: #232428;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        #username-input {
-            width: 100%;
-            padding: 8px;
-            background: #1e1f22;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-family: inherit;
-        }
+  body {
+    font-family: 'Rubik', 'Noto Sans Hebrew', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-normal);
+    font-size: 14px;
+    line-height: 1.375;
+    direction: rtl;
+  }
 
-        /* אזור הצ'אט המרכזי */
-        #main-chat {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #313338;
-        }
-        #chat-header {
-            padding: 16px;
-            border-bottom: 1px solid #2b2d31;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        #chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        /* עיצוב הודעה ספציפית */
-        .message-wrapper {
-            display: flex;
-            gap: 16px;
-            line-height: 1.4;
-        }
-        .message-wrapper:hover { background-color: #2e3035; border-radius: 4px; }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #5865f2;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .message-content { flex: 1; }
-        .message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-        .msg-username { font-weight: 600; color: white; font-size: 1rem; }
-        .msg-timestamp { font-size: 0.75rem; color: #949ba4; }
-        .msg-text { color: #dbdee1; word-break: break-word; }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar-thin-thumb); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background: #2c2f33; background-clip: padding-box; border: 2px solid transparent; }
 
-        /* אזור הקלדת הודעה */
-        #input-wrapper {
-            padding: 0 20px 24px 20px;
-        }
-        .input-box {
-            background-color: #383a40;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            padding: 10px 16px;
-        }
-        #message-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #dbdee1;
-            font-size: 1rem;
-            outline: none;
-            font-family: inherit;
-        }
-        #message-input::placeholder { color: #949ba4; }
+  /* ── LAYOUT ── */
+  #app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
 
-        /* פס גלילה מעוצב */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #2b2d31; }
-        ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #111214; }
+  /* Server rail */
+  #server-rail {
+    width: 72px;
+    min-width: 72px;
+    background: var(--bg-tertiary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-        /* התאמה למובייל */
-        @media (max-width: 768px) {
-            #servers-sidebar, #channels-sidebar { display: none; }
-        }
-    </style>
+  .server-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-radius 0.2s, background 0.2s;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .server-icon:hover { border-radius: 16px; background: var(--accent-hover); }
+  .server-icon.active { border-radius: 16px; }
+
+  .server-icon::before {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 8px;
+    height: 20px;
+    background: #fff;
+    border-radius: 0 4px 4px 0;
+    transition: transform 0.2s, height 0.2s;
+  }
+  .server-icon.active::before,
+  .server-icon:hover::before { transform: translateY(-50%) scaleY(1); height: 40px; }
+
+  .server-separator {
+    width: 32px;
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* Sidebar */
+  #sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--bg-secondary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #server-header {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-normal);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 1px 0 var(--shadow);
+    background: var(--bg-secondary);
+    transition: background 0.15s;
+  }
+  #server-header:hover { background: #35383d; }
+
+  .server-header-arrow { font-size: 12px; color: var(--text-muted); }
+
+  #channels-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 8px 0;
+  }
+
+  .channel-category {
+    margin-top: 16px;
+    margin-bottom: 4px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: default;
+    user-select: none;
+  }
+
+  .channel-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--channel-default);
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.1s, color 0.1s;
+    margin-bottom: 1px;
+    position: relative;
+    user-select: none;
+  }
+  .channel-item:hover { background: rgba(255,255,255,0.07); color: var(--interactive-hover); }
+  .channel-item.active {
+    background: rgba(255,255,255,0.13);
+    color: var(--interactive-active);
+  }
+  .channel-item.active::before {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .channel-icon { font-size: 18px; flex-shrink: 0; }
+
+  .channel-badge {
+    margin-right: auto;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0 4px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Voice members in sidebar */
+  .voice-member-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px 2px 24px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* User panel at bottom */
+  #user-panel {
+    height: 52px;
+    background: #232428;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  #user-panel .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+  }
+  #user-panel .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    border: 2px solid #232428;
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+  }
+
+  #user-panel .user-info { flex: 1; min-width: 0; }
+  #user-panel .user-name { font-size: 13px; font-weight: 600; color: var(--text-normal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #user-panel .user-tag { font-size: 11px; color: var(--text-muted); }
+
+  #user-panel .panel-actions { display: flex; gap: 4px; }
+  .panel-btn {
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    background: none;
+    border: none;
+    color: var(--interactive-normal);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: background 0.1s, color 0.1s;
+  }
+  .panel-btn:hover { background: rgba(255,255,255,0.07); color: var(--interactive-hover); }
+
+  /* Secret admin pixel */
+  #secret-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: rgba(88,101,242,0.15);
+    cursor: pointer;
+    z-index: 9999;
+    border-radius: 0 2px 0 0;
+    transition: background 0.2s;
+  }
+  #secret-btn:hover { background: rgba(88,101,242,0.4); }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  /* Channel header */
+  #channel-header {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    box-shadow: 0 1px 0 var(--shadow);
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    z-index: 10;
+  }
+
+  #channel-header .ch-icon { font-size: 20px; color: var(--text-muted); }
+  #channel-header .ch-name { font-weight: 600; font-size: 15px; color: var(--text-normal); }
+  #channel-header .ch-divider { width: 1px; height: 24px; background: var(--border); margin: 0 8px; }
+  #channel-header .ch-desc { font-size: 13px; color: var(--text-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Members toggle */
+  .header-btn {
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    background: none;
+    border: none;
+    color: var(--interactive-normal);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: background 0.1s, color 0.1s;
+    margin-right: auto;
+  }
+  .header-btn:hover { background: rgba(255,255,255,0.07); color: var(--interactive-hover); }
+
+  /* Voice area */
+  #voice-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 40px;
+  }
+
+  .voice-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .voice-subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 360px;
+  }
+
+  #voice-participants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    min-height: 80px;
+  }
+
+  .voice-participant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInUp 0.3s ease;
+  }
+  .voice-participant .vp-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .voice-participant.speaking .vp-avatar { border-color: var(--green); }
+  .voice-participant .vp-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .voice-participant .vp-name { font-size: 12px; color: var(--text-muted); }
+
+  #join-voice-btn, #leave-voice-btn {
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.1s, filter 0.1s;
+  }
+  #join-voice-btn { background: var(--green); color: #fff; }
+  #leave-voice-btn { background: var(--red); color: #fff; display: none; }
+  #join-voice-btn:hover, #leave-voice-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  #join-voice-btn:active, #leave-voice-btn:active { transform: translateY(0); }
+
+  /* Messages area */
+  #messages-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0 8px;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+  }
+
+  .messages-welcome {
+    padding: 16px 16px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .welcome-icon {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: var(--channeltextarea-background);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+  .welcome-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-normal);
+    margin-bottom: 8px;
+  }
+  .welcome-desc { font-size: 15px; color: var(--text-muted); }
+
+  /* Message */
+  .message-group {
+    padding: 2px 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    position: relative;
+    animation: fadeInUp 0.2s ease;
+  }
+  .message-group:hover { background: rgba(0,0,0,0.07); }
+  .message-group.first { margin-top: 16px; padding-top: 2px; }
+
+  .msg-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+    overflow: hidden;
+    cursor: pointer;
+    margin-top: 2px;
+  }
+  .msg-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .msg-compact-spacer {
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .msg-content-wrap { flex: 1; min-width: 0; }
+
+  .msg-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+  .msg-author {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-normal);
+    cursor: pointer;
+    transition: text-decoration 0.1s;
+  }
+  .msg-author:hover { text-decoration: underline; }
+  .msg-author.admin-name { color: var(--accent); }
+  .msg-timestamp {
+    font-size: 11px;
+    color: var(--text-muted);
+    direction: ltr;
+  }
+
+  .msg-text {
+    font-size: 15px;
+    color: var(--text-normal);
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .msg-text a { color: var(--text-link); text-decoration: none; }
+  .msg-text a:hover { text-decoration: underline; }
+
+  .msg-compact-ts {
+    position: absolute;
+    left: 16px;
+    top: 7px;
+    font-size: 10px;
+    color: transparent;
+    direction: ltr;
+  }
+  .message-group:hover .msg-compact-ts { color: var(--text-muted); }
+
+  /* Message actions toolbar */
+  .msg-actions {
+    position: absolute;
+    top: -14px;
+    left: 8px;
+    background: var(--bg-floating);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: none;
+    gap: 2px;
+    padding: 3px;
+    box-shadow: 0 4px 12px var(--shadow);
+    z-index: 100;
+  }
+  .message-group:hover .msg-actions { display: flex; }
+  .msg-action-btn {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    transition: background 0.1s, color 0.1s;
+  }
+  .msg-action-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-normal); }
+  .msg-action-btn.danger:hover { background: rgba(242,63,66,0.15); color: var(--red); }
+
+  /* Typing indicator */
+  #typing-indicator {
+    padding: 4px 72px 4px 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .typing-dot {
+    width: 5px; height: 5px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* Input area */
+  #input-area {
+    padding: 0 16px 20px;
+    flex-shrink: 0;
+  }
+
+  #message-form {
+    background: var(--channeltextarea-background);
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    padding: 0 16px 0 0;
+    min-height: 44px;
+    position: relative;
+  }
+  #message-form.muted-form {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  #msg-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-normal);
+    font-size: 15px;
+    font-family: inherit;
+    padding: 11px 0 11px 0;
+    resize: none;
+    max-height: 200px;
+    overflow-y: auto;
+    direction: rtl;
+    line-height: 1.5;
+  }
+  #msg-input::placeholder { color: var(--text-muted); }
+
+  .input-btn {
+    width: 44px; height: 44px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transition: color 0.1s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .input-btn:hover { color: var(--interactive-hover); transform: scale(1.1); }
+  .input-btn.send { color: var(--accent); }
+  .input-btn.send:hover { color: var(--accent-hover); }
+
+  .input-left-btn {
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transition: color 0.1s, transform 0.1s;
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+  .input-left-btn:hover { color: var(--interactive-hover); background: rgba(255,255,255,0.07); }
+
+  #muted-banner {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 10px;
+    background: rgba(242,63,66,0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(242,63,66,0.2);
+    display: none;
+  }
+
+  /* ── MODALS ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.15s ease;
+  }
+  .modal-overlay.hidden { display: none !important; }
+
+  .modal {
+    background: #313338;
+    border-radius: 8px;
+    padding: 24px;
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    animation: slideUp 0.2s ease;
+    direction: rtl;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-normal);
+    margin-bottom: 4px;
+  }
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .modal-field { margin-bottom: 16px; }
+  .modal-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .modal-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-normal);
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    direction: rtl;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+
+  .modal-actions { display: flex; gap: 12px; justify-content: flex-start; margin-top: 20px; }
+
+  .btn-primary {
+    padding: 10px 20px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    padding: 10px 20px;
+    background: none;
+    color: var(--text-normal);
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.07); }
+
+  .btn-danger {
+    padding: 10px 20px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.15s;
+  }
+  .btn-danger:hover { filter: brightness(1.1); }
+
+  /* Admin panel */
+  #admin-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100vh;
+    background: #111214;
+    border-right: 1px solid var(--border);
+    z-index: 500;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 16px;
+    direction: rtl;
+  }
+  #admin-panel.open { transform: translateX(0); }
+
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .admin-section { margin-bottom: 20px; }
+  .admin-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .admin-user-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
+    margin-bottom: 6px;
+    transition: background 0.1s;
+  }
+  .admin-user-item:hover { background: rgba(255,255,255,0.07); }
+  .admin-user-name { flex: 1; font-size: 13px; font-weight: 500; }
+
+  .admin-action-btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.1s;
+  }
+  .admin-action-btn:hover { filter: brightness(1.15); }
+  .admin-action-btn.mute { background: rgba(240,178,50,0.2); color: var(--yellow); }
+  .admin-action-btn.unmute { background: rgba(35,165,90,0.2); color: var(--green); }
+  .admin-action-btn.timeout { background: rgba(242,63,66,0.2); color: var(--red); }
+
+  /* Context menu */
+  #context-menu {
+    position: fixed;
+    background: var(--bg-floating);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px;
+    min-width: 160px;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display: none;
+    direction: rtl;
+    animation: fadeIn 0.1s ease;
+  }
+
+  .ctx-item {
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-normal);
+    transition: background 0.1s, color 0.1s;
+  }
+  .ctx-item:hover { background: var(--accent); color: #fff; }
+  .ctx-item.danger:hover { background: var(--red); }
+  .ctx-separator { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* Toast notifications */
+  #toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  .toast {
+    background: #232428;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-normal);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    animation: toastIn 0.3s ease forwards;
+    direction: rtl;
+  }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .toast.error { border-color: var(--red); color: var(--red); }
+  .toast.warning { border-color: var(--yellow); color: var(--yellow); }
+  .toast.admin { border-color: var(--accent); color: var(--accent); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Scrollbar jump button */
+  #scroll-btn {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: none;
+    gap: 6px;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(88,101,242,0.4);
+    z-index: 10;
+    animation: fadeInUp 0.2s ease;
+    transition: filter 0.1s;
+  }
+  #scroll-btn.visible { display: flex; }
+  #scroll-btn:hover { filter: brightness(1.1); }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    #server-rail { display: none; }
+    #sidebar { width: 200px; min-width: 200px; }
+  }
+  @media (max-width: 500px) {
+    #sidebar { position: fixed; right: -200px; top: 0; height: 100vh; z-index: 200; transition: right 0.3s; }
+    #sidebar.open { right: 0; }
+    #main { width: 100%; }
+  }
+
+  /* Muted badge */
+  .muted-badge {
+    background: rgba(240,178,50,0.2);
+    color: var(--yellow);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* Audio elements hidden */
+  audio { display: none; }
+
+  /* Voice channel connected indicator */
+  #voice-connected-bar {
+    background: #1a1b1e;
+    border-top: 1px solid var(--border);
+    padding: 8px 12px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  #voice-connected-bar.visible { display: flex; }
+  .vc-status { display: flex; align-items: center; gap: 6px; color: var(--green); font-weight: 600; }
+  .vc-channel { color: var(--text-muted); font-size: 11px; }
+  .vc-leave { background: none; border: none; color: var(--red); cursor: pointer; font-size: 18px; padding: 4px; border-radius: 4px; }
+  .vc-leave:hover { background: rgba(242,63,66,0.1); }
+</style>
 </head>
 <body>
 
-    <nav id="servers-sidebar">
-        <div class="server-icon active">A</div>
-        <div class="server-icon" style="font-size: 20px;">+</div>
-    </nav>
+<div id="app">
+  <!-- Server Rail -->
+  <nav id="server-rail">
+    <div class="server-icon active" title="Anon Palace">AP</div>
+    <div class="server-separator"></div>
+  </nav>
 
-    <aside id="channels-sidebar">
-        <div class="server-header">
-            הקבוצה של החבר'ה
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div id="server-header">
+      <span>Anon Palace</span>
+      <span class="server-header-arrow">▾</span>
+    </div>
+
+    <div id="channels-list">
+      <div class="channel-category">📝 ערוצי טקסט</div>
+      <div class="channel-item active" data-channel="general" data-type="text">
+        <span class="channel-icon">#</span>
+        <span>כללי</span>
+      </div>
+      <div class="channel-item" data-channel="gaming" data-type="text">
+        <span class="channel-icon">#</span>
+        <span>גיימינג</span>
+      </div>
+      <div class="channel-item" data-channel="help" data-type="text">
+        <span class="channel-icon">#</span>
+        <span>עזרה</span>
+      </div>
+
+      <div class="channel-category">🔊 ערוצי קול</div>
+      <div class="channel-item" data-channel="voice" data-type="voice">
+        <span class="channel-icon">🔊</span>
+        <span>לובי קולי</span>
+      </div>
+      <div id="voice-members-list"></div>
+    </div>
+
+    <div id="voice-connected-bar">
+      <div>
+        <div class="vc-status"><span>🟢</span> מחובר לקול</div>
+        <div class="vc-channel" id="vc-bar-name">לובי קולי</div>
+      </div>
+      <button class="vc-leave" id="vc-leave-bar" title="נתק">📵</button>
+    </div>
+
+    <div id="user-panel">
+      <div style="position:relative;flex-shrink:0;">
+        <div class="avatar" id="user-avatar-btn" title="ערוך פרופיל">
+          <span id="avatar-initial">A</span>
         </div>
-        <div class="channels-list">
-            <div class="channel-item active">
-                <span class="hash">#</span> כללי
-            </div>
-            <div class="channel-item">
-                <span class="hash">#</span> גיימינג
-            </div>
-            <div class="channel-item">
-                <span class="hash">#</span> ממים
-            </div>
+        <div class="status-dot"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name" id="display-username">משתמש</div>
+        <div class="user-tag">#anon</div>
+      </div>
+      <div class="panel-actions">
+        <button class="panel-btn" id="mute-self-btn" title="השתק מיקרופון">🎤</button>
+        <button class="panel-btn" id="settings-btn" title="הגדרות פרופיל">⚙️</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main">
+    <!-- Channel Header -->
+    <div id="channel-header">
+      <span class="ch-icon" id="ch-icon">#</span>
+      <span class="ch-name" id="ch-name">כללי</span>
+      <span class="ch-divider"></span>
+      <span class="ch-desc" id="ch-desc">ברוכים הבאים ל-Anon Palace! הערוץ הכללי לכל הנושאים.</span>
+    </div>
+
+    <!-- Text Chat Area -->
+    <div id="chat-area" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div id="messages-wrapper">
+        <div id="messages-container">
+          <div class="messages-welcome" id="channel-welcome">
+            <div class="welcome-icon" id="welcome-icon">💬</div>
+            <div class="welcome-title" id="welcome-title">ברוכים הבאים ל-#כללי</div>
+            <div class="welcome-desc">זהו תחילתו של ערוץ <strong>#כללי</strong>. שלחו הודעה כדי להתחיל!</div>
+          </div>
+          <div id="messages-list"></div>
         </div>
-        <div id="user-controls">
-            <input type="text" id="username-input" placeholder="בחר כינוי..." value="אנונימי">
+        <button id="scroll-btn">⬇ הודעות חדשות</button>
+      </div>
+
+      <div id="typing-indicator">
+        <span id="typing-text"></span>
+      </div>
+
+      <div id="input-area">
+        <div id="muted-banner">🔇 הושתקת ואינך יכול לשלוח הודעות כרגע.</div>
+        <div id="message-form">
+          <button class="input-left-btn" title="הוסף קובץ">➕</button>
+          <textarea id="msg-input" placeholder="שלח הודעה ל-#כללי" rows="1" maxlength="2000"></textarea>
+          <button class="input-btn send" id="send-btn" title="שלח">➤</button>
         </div>
-    </aside>
-
-    <main id="main-chat">
-        <header id="chat-header">
-            <span style="color: #949ba4; margin-left: 8px;">#</span> כללי
-        </header>
-        
-        <div id="chat-messages">
-            </div>
-
-        <div id="input-wrapper">
-            <div class="input-box">
-                <input type="text" id="message-input" placeholder="הקלד הודעה לערוץ #כללי..." autocomplete="off">
-            </div>
+        <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:6px;">
+          Enter לשליחה • Shift+Enter לשורה חדשה
         </div>
-    </main>
+      </div>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <!-- Voice Channel Area -->
+    <div id="voice-area" style="display:none;">
+      <div class="voice-title">🔊 לובי קולי</div>
+      <div class="voice-subtitle">הצטרף לשיחה קולית עם שאר חברי השרת</div>
+      <div id="voice-participants"></div>
+      <div style="display:flex;gap:12px;">
+        <button id="join-voice-btn">🎤 הצטרף לשיחה</button>
+        <button id="leave-voice-btn">📵 עזוב שיחה</button>
+      </div>
+      <div id="audio-container"></div>
+    </div>
+  </main>
+</div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_JNfME-T2fJTlBfInFCBXgnMXLGEapoc",
-            authDomain: "anon-6c5b3.firebaseapp.com",
-            databaseURL: "https://anon-6c5b3-default-rtdb.firebaseio.com",
-            projectId: "anon-6c5b3",
-            storageBucket: "anon-6c5b3.firebasestorage.app",
-            messagingSenderId: "697842373183",
-            appId: "1:697842373183:web:0f8f2259f2af6baba4de8a"
-        };
+<!-- Context Menu -->
+<div id="context-menu"></div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const messagesRef = ref(db, 'messages');
+<!-- Toast Container -->
+<div id="toast-container"></div>
 
-        const messageInput = document.getElementById('message-input');
-        const usernameInput = document.getElementById('username-input');
-        const chatMessages = document.getElementById('chat-messages');
+<!-- Secret Admin Button -->
+<div id="secret-btn" title=""></div>
 
-        // פונקציה לשליחת הודעה
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            const user = usernameInput.value.trim() || "אנונימי";
-            
-            if (text !== "") {
-                push(messagesRef, {
-                    username: user,
-                    text: text,
-                    timestamp: Date.now()
-                });
-                messageInput.value = ""; // איפוס תיבת הטקסט
-            }
+<!-- Profile Modal -->
+<div class="modal-overlay hidden" id="profile-modal">
+  <div class="modal">
+    <div class="modal-title">✏️ ערוך פרופיל</div>
+    <div class="modal-subtitle">שינויים יופיעו בכל ההודעות החדשות שתשלח</div>
+    <div class="modal-field">
+      <label class="modal-label">שם תצוגה</label>
+      <input class="modal-input" id="profile-name" type="text" placeholder="הכנס שם..." maxlength="32">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">URL של תמונת פרופיל</label>
+      <input class="modal-input" id="profile-avatar" type="url" placeholder="https://...">
+    </div>
+    <div style="margin-top:8px;display:flex;gap:12px;align-items:center;">
+      <div id="profile-preview" style="width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;"></div>
+      <div style="font-size:12px;color:var(--text-muted);">תצוגה מקדימה</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="save-profile-btn">💾 שמור שינויים</button>
+      <button class="btn-secondary" id="cancel-profile-btn">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <div class="admin-title">🛡️ לוח אדמין</div>
+    <button class="btn-secondary" id="close-admin-btn" style="font-size:18px;padding:4px 8px;">✕</button>
+  </div>
+  <div class="admin-section">
+    <div class="admin-section-title">⚡ ניהול משתמשים</div>
+    <div id="admin-users-list"></div>
+  </div>
+  <div class="admin-section">
+    <div class="admin-section-title">📋 פעולות אחרונות</div>
+    <div id="admin-log" style="font-size:12px;color:var(--text-muted);"></div>
+  </div>
+</div>
+
+<script type="module">
+// ══════════════════════════════════════════════
+//  FIREBASE INIT
+// ══════════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getDatabase, ref, push, set, onValue, off,
+  remove, serverTimestamp, onDisconnect, get,
+  query, orderByChild, limitToLast, update
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB_JNfME-T2fJTlBfInFCBXgnMXLGEapoc",
+  authDomain: "anon-6c5b3.firebaseapp.com",
+  databaseURL: "https://anon-6c5b3-default-rtdb.firebaseio.com",
+  projectId: "anon-6c5b3",
+  storageBucket: "anon-6c5b3.firebasestorage.app",
+  messagingSenderId: "697842373183",
+  appId: "1:697842373183:web:0f8f2259f2af6baba4de8a",
+  measurementId: "G-8GNDCNEMB4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ══════════════════════════════════════════════
+//  USER STATE
+// ══════════════════════════════════════════════
+let userId = localStorage.getItem('ap_userId');
+if (!userId) {
+  userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+  localStorage.setItem('ap_userId', userId);
+}
+
+let userName = localStorage.getItem('ap_userName') || 'אנונימי' + Math.floor(Math.random()*9999);
+let userAvatar = localStorage.getItem('ap_userAvatar') || '';
+let isAdmin = false;
+let isMuted = false;
+let timeoutUntil = 0;
+
+// Save username to localStorage
+localStorage.setItem('ap_userName', userName);
+
+// ══════════════════════════════════════════════
+//  CHANNEL STATE
+// ══════════════════════════════════════════════
+const CHANNELS = {
+  general: { name: 'כללי', icon: '#', desc: 'ברוכים הבאים ל-Anon Palace! הערוץ הכללי לכל הנושאים.' },
+  gaming:  { name: 'גיימינג', icon: '#', desc: 'ערוץ הגיימינג — שוחח על משחקים, המלצות ועוד.' },
+  help:    { name: 'עזרה', icon: '#', desc: 'צריך עזרה? שאל כאן ואחד מהחברים ישמח לעזור!' }
+};
+
+let currentChannel = 'general';
+let messagesRef = null;
+let typingRef = null;
+let currentMsgListener = null;
+let currentTypingListener = null;
+let typingTimeout = null;
+let isTyping = false;
+let isAtBottom = true;
+
+// ══════════════════════════════════════════════
+//  DOM REFS
+// ══════════════════════════════════════════════
+const msgsList        = document.getElementById('messages-list');
+const msgInput        = document.getElementById('msg-input');
+const sendBtn         = document.getElementById('send-btn');
+const typingIndicator = document.getElementById('typing-text');
+const typingArea      = document.getElementById('typing-indicator');
+const messagesContainer = document.getElementById('messages-container');
+const scrollBtn       = document.getElementById('scroll-btn');
+const inputPlaceholder = () => `שלח הודעה ל-#${CHANNELS[currentChannel]?.name || currentChannel}`;
+const mutedBanner     = document.getElementById('muted-banner');
+const msgForm         = document.getElementById('message-form');
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function getInitial(name) {
+  return name ? name.trim().charAt(0).toUpperCase() : 'A';
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const time = d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+  if (isToday) return `היום ב-${time}`;
+  return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' }) + ' ' + time;
+}
+
+function showToast(msg, type = '') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; t.style.transition = 'all 0.3s'; setTimeout(() => t.remove(), 300); }, 2800);
+}
+
+function updateUserPanel() {
+  document.getElementById('display-username').textContent = userName;
+  const avatarEl = document.getElementById('user-avatar-btn');
+  const initial = document.getElementById('avatar-initial');
+  initial.textContent = getInitial(userName);
+  if (userAvatar) {
+    // Show image
+    if (!avatarEl.querySelector('img')) {
+      const img = document.createElement('img');
+      avatarEl.appendChild(img);
+    }
+    avatarEl.querySelector('img').src = userAvatar;
+    avatarEl.querySelector('img').style.display = 'block';
+    initial.style.display = 'none';
+  } else {
+    if (avatarEl.querySelector('img')) avatarEl.querySelector('img').style.display = 'none';
+    initial.style.display = 'block';
+  }
+}
+
+function checkMuteStatus() {
+  // Check Firebase for mute status
+  onValue(ref(db, `moderation/muted/${userId}`), snap => {
+    isMuted = !!snap.val();
+    updateMuteUI();
+  });
+  onValue(ref(db, `moderation/timeouts/${userId}`), snap => {
+    const val = snap.val();
+    if (val && val > Date.now()) {
+      timeoutUntil = val;
+      setTimeout(() => { timeoutUntil = 0; updateMuteUI(); }, val - Date.now());
+    } else {
+      timeoutUntil = 0;
+    }
+    updateMuteUI();
+  });
+}
+
+function updateMuteUI() {
+  const effectivelySilenced = isMuted || (timeoutUntil > Date.now());
+  if (effectivelySilenced) {
+    msgForm.classList.add('muted-form');
+    mutedBanner.style.display = 'block';
+    if (timeoutUntil > Date.now()) {
+      const mins = Math.ceil((timeoutUntil - Date.now()) / 60000);
+      mutedBanner.textContent = `⏱️ קיבלת Timeout. תוכל לשלוח הודעות בעוד ${mins} דקות.`;
+    } else {
+      mutedBanner.textContent = '🔇 הושתקת ואינך יכול לשלוח הודעות כרגע.';
+    }
+  } else {
+    msgForm.classList.remove('muted-form');
+    mutedBanner.style.display = 'none';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  CHANNEL SWITCHING
+// ══════════════════════════════════════════════
+function switchChannel(channelId, channelType) {
+  // Remove old listeners
+  if (messagesRef && currentMsgListener) { off(messagesRef, 'value', currentMsgListener); }
+  if (typingRef && currentTypingListener) { off(typingRef, 'value', currentTypingListener); }
+
+  currentChannel = channelId;
+
+  // Update sidebar
+  document.querySelectorAll('.channel-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.channel === channelId);
+  });
+
+  const chatArea  = document.getElementById('chat-area');
+  const voiceArea = document.getElementById('voice-area');
+
+  if (channelType === 'voice') {
+    chatArea.style.display = 'none';
+    voiceArea.style.display = 'flex';
+    document.getElementById('ch-icon').textContent = '🔊';
+    document.getElementById('ch-name').textContent = 'לובי קולי';
+    document.getElementById('ch-desc').textContent = 'ערוץ קולי — לחץ הצטרף להשתתפות בשיחה';
+    return;
+  }
+
+  chatArea.style.display = 'flex';
+  voiceArea.style.display = 'none';
+
+  const ch = CHANNELS[channelId];
+  document.getElementById('ch-icon').textContent = ch.icon;
+  document.getElementById('ch-name').textContent = ch.name;
+  document.getElementById('ch-desc').textContent = ch.desc;
+  document.getElementById('welcome-title').textContent = `ברוכים הבאים ל-#${ch.name}`;
+  document.getElementById('welcome-icon').textContent = channelId === 'gaming' ? '🎮' : channelId === 'help' ? '🆘' : '💬';
+  msgInput.placeholder = `שלח הודעה ל-#${ch.name}`;
+
+  // Load messages
+  msgsList.innerHTML = '';
+  messagesRef = ref(db, `channels/${channelId}/messages`);
+  const msgsQuery = query(messagesRef, orderByChild('ts'), limitToLast(100));
+
+  currentMsgListener = onValue(msgsQuery, snap => {
+    msgsList.innerHTML = '';
+    let prevAuthor = null;
+    let prevTime = 0;
+
+    snap.forEach(child => {
+      const msg = child.val();
+      const msgId = child.key;
+      const sameAuthor = (prevAuthor === msg.authorId) && ((msg.ts - prevTime) < 5 * 60 * 1000);
+      renderMessage(msg, msgId, !sameAuthor);
+      prevAuthor = msg.authorId;
+      prevTime = msg.ts || 0;
+    });
+
+    if (isAtBottom) scrollToBottom();
+  });
+
+  // Typing
+  typingRef = ref(db, `channels/${channelId}/typing`);
+  currentTypingListener = onValue(typingRef, snap => {
+    const data = snap.val() || {};
+    const typers = Object.entries(data)
+      .filter(([uid, info]) => uid !== userId && info.active && (Date.now() - info.ts) < 6000)
+      .map(([_, info]) => info.name);
+
+    if (typers.length === 0) {
+      typingIndicator.textContent = '';
+      typingArea.innerHTML = '<span id="typing-text"></span>';
+    } else if (typers.length === 1) {
+      renderTyping(`${typers[0]} מקליד/ה...`);
+    } else if (typers.length === 2) {
+      renderTyping(`${typers[0]} ו-${typers[1]} מקלידים...`);
+    } else {
+      renderTyping(`מספר משתמשים מקלידים...`);
+    }
+  });
+}
+
+function renderTyping(text) {
+  const area = document.getElementById('typing-indicator');
+  area.innerHTML = `
+    <div class="typing-dots">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+    <span style="color:var(--text-muted);font-size:12px;">${escapeHtml(text)}</span>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  RENDER MESSAGE
+// ══════════════════════════════════════════════
+function renderMessage(msg, msgId, isFirst) {
+  const group = document.createElement('div');
+  group.className = `message-group${isFirst ? ' first' : ''}`;
+  group.dataset.msgId = msgId;
+  group.dataset.authorId = msg.authorId;
+  group.dataset.authorName = msg.authorName;
+
+  const avatarWrap = document.createElement('div');
+
+  if (isFirst) {
+    avatarWrap.className = 'msg-avatar';
+    if (msg.authorAvatar) {
+      const img = document.createElement('img');
+      img.src = msg.authorAvatar;
+      img.alt = msg.authorName;
+      img.onerror = () => { img.remove(); avatarWrap.textContent = getInitial(msg.authorName); };
+      avatarWrap.appendChild(img);
+    } else {
+      avatarWrap.textContent = getInitial(msg.authorName || 'A');
+    }
+  } else {
+    avatarWrap.className = 'msg-compact-spacer';
+    // Compact timestamp
+    const compactTs = document.createElement('span');
+    compactTs.className = 'msg-compact-ts';
+    compactTs.textContent = msg.ts ? new Date(msg.ts).toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'}) : '';
+    group.appendChild(compactTs);
+  }
+
+  group.appendChild(avatarWrap);
+
+  const contentWrap = document.createElement('div');
+  contentWrap.className = 'msg-content-wrap';
+
+  if (isFirst) {
+    const header = document.createElement('div');
+    header.className = 'msg-header';
+
+    const authorEl = document.createElement('span');
+    authorEl.className = `msg-author${msg.authorId === 'admin' ? ' admin-name' : ''}`;
+    authorEl.textContent = msg.authorName || 'אנונימי';
+
+    const tsEl = document.createElement('span');
+    tsEl.className = 'msg-timestamp';
+    tsEl.textContent = formatTime(msg.ts);
+
+    header.appendChild(authorEl);
+    header.appendChild(tsEl);
+    contentWrap.appendChild(header);
+  }
+
+  const textEl = document.createElement('div');
+  textEl.className = 'msg-text';
+  // XSS-safe: use textContent for message body
+  textEl.textContent = msg.text || '';
+
+  contentWrap.appendChild(textEl);
+  group.appendChild(contentWrap);
+
+  // Actions toolbar
+  const actions = document.createElement('div');
+  actions.className = 'msg-actions';
+
+  // Delete own message or admin delete
+  if (msg.authorId === userId || isAdmin) {
+    const delBtn = document.createElement('button');
+    delBtn.className = 'msg-action-btn danger';
+    delBtn.title = 'מחק הודעה';
+    delBtn.textContent = '🗑️';
+    delBtn.addEventListener('click', () => deleteMessage(msgId));
+    actions.appendChild(delBtn);
+  }
+
+  // Admin: mute/timeout user (only for other users)
+  if (isAdmin && msg.authorId !== userId) {
+    const muteBtn = document.createElement('button');
+    muteBtn.className = 'msg-action-btn';
+    muteBtn.title = 'השתק משתמש';
+    muteBtn.textContent = '🔇';
+    muteBtn.addEventListener('click', () => muteUser(msg.authorId, msg.authorName));
+    actions.appendChild(muteBtn);
+
+    const timeoutBtn = document.createElement('button');
+    timeoutBtn.className = 'msg-action-btn';
+    timeoutBtn.title = 'Timeout 5 דקות';
+    timeoutBtn.textContent = '⏱️';
+    timeoutBtn.addEventListener('click', () => timeoutUser(msg.authorId, msg.authorName, 5));
+    actions.appendChild(timeoutBtn);
+  }
+
+  group.appendChild(actions);
+  msgsList.appendChild(group);
+}
+
+// ══════════════════════════════════════════════
+//  SEND MESSAGE
+// ══════════════════════════════════════════════
+async function sendMessage() {
+  const text = msgInput.value.trim();
+  if (!text || text.length > 2000) return;
+
+  if (isMuted || timeoutUntil > Date.now()) {
+    showToast('אינך יכול לשלוח הודעות כרגע.', 'error');
+    return;
+  }
+
+  // Stop typing
+  setTyping(false);
+
+  msgInput.value = '';
+  msgInput.style.height = 'auto';
+
+  try {
+    const msgsRef = ref(db, `channels/${currentChannel}/messages`);
+    await push(msgsRef, {
+      text,
+      authorId: userId,
+      authorName: userName,
+      authorAvatar: userAvatar || '',
+      ts: Date.now()
+    });
+    isAtBottom = true;
+    scrollToBottom();
+  } catch (err) {
+    showToast('שגיאה בשליחת ההודעה: ' + err.message, 'error');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  DELETE MESSAGE
+// ══════════════════════════════════════════════
+async function deleteMessage(msgId) {
+  try {
+    await remove(ref(db, `channels/${currentChannel}/messages/${msgId}`));
+    showToast('ההודעה נמחקה.', 'success');
+  } catch (err) {
+    showToast('שגיאה במחיקה: ' + err.message, 'error');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  TYPING INDICATOR
+// ══════════════════════════════════════════════
+function setTyping(active) {
+  if (currentChannel === 'voice') return;
+  if (active === isTyping) return;
+  isTyping = active;
+  const typingNodeRef = ref(db, `channels/${currentChannel}/typing/${userId}`);
+  if (active) {
+    set(typingNodeRef, { name: userName, active: true, ts: Date.now() });
+  } else {
+    set(typingNodeRef, { active: false, ts: Date.now() });
+  }
+}
+
+// ══════════════════════════════════════════════
+//  SCROLL
+// ══════════════════════════════════════════════
+function scrollToBottom() {
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  scrollBtn.classList.remove('visible');
+}
+
+messagesContainer.addEventListener('scroll', () => {
+  const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+  isAtBottom = scrollTop + clientHeight >= scrollHeight - 80;
+  if (isAtBottom) scrollBtn.classList.remove('visible');
+  else scrollBtn.classList.add('visible');
+});
+
+scrollBtn.addEventListener('click', scrollToBottom);
+
+// ══════════════════════════════════════════════
+//  INPUT EVENTS
+// ══════════════════════════════════════════════
+msgInput.addEventListener('input', () => {
+  // Auto-resize
+  msgInput.style.height = 'auto';
+  msgInput.style.height = Math.min(msgInput.scrollHeight, 200) + 'px';
+
+  // Typing
+  if (msgInput.value.trim()) {
+    setTyping(true);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => setTyping(false), 4000);
+  } else {
+    setTyping(false);
+  }
+});
+
+msgInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+sendBtn.addEventListener('click', sendMessage);
+
+// ══════════════════════════════════════════════
+//  CHANNEL CLICK
+// ══════════════════════════════════════════════
+document.querySelectorAll('.channel-item').forEach(el => {
+  el.addEventListener('click', () => {
+    switchChannel(el.dataset.channel, el.dataset.type);
+  });
+});
+
+// ══════════════════════════════════════════════
+//  PROFILE MODAL
+// ══════════════════════════════════════════════
+function openProfileModal() {
+  const modal = document.getElementById('profile-modal');
+  document.getElementById('profile-name').value = userName;
+  document.getElementById('profile-avatar').value = userAvatar;
+  updateProfilePreview();
+  modal.classList.remove('hidden');
+}
+
+function updateProfilePreview() {
+  const preview = document.getElementById('profile-preview');
+  const avatarVal = document.getElementById('profile-avatar').value.trim();
+  const nameVal = document.getElementById('profile-name').value.trim() || 'A';
+  preview.innerHTML = '';
+  if (avatarVal) {
+    const img = document.createElement('img');
+    img.src = avatarVal;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+    img.onerror = () => { img.remove(); preview.textContent = getInitial(nameVal); };
+    preview.appendChild(img);
+  } else {
+    preview.textContent = getInitial(nameVal);
+  }
+}
+
+document.getElementById('profile-avatar').addEventListener('input', updateProfilePreview);
+document.getElementById('profile-name').addEventListener('input', updateProfilePreview);
+
+document.getElementById('user-avatar-btn').addEventListener('click', openProfileModal);
+document.getElementById('settings-btn').addEventListener('click', openProfileModal);
+
+document.getElementById('save-profile-btn').addEventListener('click', () => {
+  const newName = document.getElementById('profile-name').value.trim();
+  const newAvatar = document.getElementById('profile-avatar').value.trim();
+  if (!newName) { showToast('יש להזין שם תצוגה.', 'error'); return; }
+  userName = newName;
+  userAvatar = newAvatar;
+  localStorage.setItem('ap_userName', userName);
+  localStorage.setItem('ap_userAvatar', userAvatar);
+  updateUserPanel();
+  document.getElementById('profile-modal').classList.add('hidden');
+  showToast('הפרופיל עודכן!', 'success');
+});
+
+document.getElementById('cancel-profile-btn').addEventListener('click', () => {
+  document.getElementById('profile-modal').classList.add('hidden');
+});
+
+document.getElementById('profile-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('profile-modal'))
+    document.getElementById('profile-modal').classList.add('hidden');
+});
+
+// ══════════════════════════════════════════════
+//  ADMIN SYSTEM
+// ══════════════════════════════════════════════
+const ADMIN_PASSWORD = '2170';
+
+document.getElementById('secret-btn').addEventListener('click', () => {
+  if (isAdmin) {
+    document.getElementById('admin-panel').classList.toggle('open');
+    return;
+  }
+  const pwd = prompt('🔐 הכנס סיסמת מנהל:');
+  if (pwd === ADMIN_PASSWORD) {
+    isAdmin = true;
+    showToast('🛡️ כוחות אדמין הופעלו!', 'admin');
+    document.getElementById('secret-btn').style.background = 'rgba(88,101,242,0.5)';
+    document.getElementById('admin-panel').classList.add('open');
+    loadAdminUsers();
+  } else if (pwd !== null) {
+    showToast('❌ סיסמה שגויה', 'error');
+  }
+});
+
+document.getElementById('close-admin-btn').addEventListener('click', () => {
+  document.getElementById('admin-panel').classList.remove('open');
+});
+
+function loadAdminUsers() {
+  const usersRef = ref(db, 'users');
+  onValue(usersRef, snap => {
+    const list = document.getElementById('admin-users-list');
+    list.innerHTML = '';
+    const data = snap.val() || {};
+    Object.entries(data).forEach(([uid, info]) => {
+      if (uid === userId) return;
+      const item = document.createElement('div');
+      item.className = 'admin-user-item';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'admin-user-name';
+      nameEl.textContent = info.name || 'אנונימי';
+      item.appendChild(nameEl);
+
+      const muteBtn = document.createElement('button');
+      muteBtn.className = 'admin-action-btn mute';
+      muteBtn.textContent = 'השתק';
+      muteBtn.addEventListener('click', () => muteUser(uid, info.name));
+      item.appendChild(muteBtn);
+
+      const toBtn = document.createElement('button');
+      toBtn.className = 'admin-action-btn timeout';
+      toBtn.textContent = '5 דק׳';
+      toBtn.addEventListener('click', () => timeoutUser(uid, info.name, 5));
+      item.appendChild(toBtn);
+
+      list.appendChild(item);
+    });
+    if (list.children.length === 0) {
+      list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">אין משתמשים אחרים זמינים</div>';
+    }
+  });
+}
+
+async function muteUser(targetId, targetName) {
+  if (!isAdmin) return;
+  try {
+    const currentVal = (await get(ref(db, `moderation/muted/${targetId}`))).val();
+    if (currentVal) {
+      await set(ref(db, `moderation/muted/${targetId}`), null);
+      showToast(`🔊 ${targetName} שוחרר מהשתקה`, 'success');
+      logAdminAction(`שוחרר ${targetName} מהשתקה`);
+    } else {
+      await set(ref(db, `moderation/muted/${targetId}`), true);
+      showToast(`🔇 ${targetName} הושתק`, 'warning');
+      logAdminAction(`הושתק ${targetName}`);
+    }
+  } catch(e) { showToast('שגיאה: ' + e.message, 'error'); }
+}
+
+async function timeoutUser(targetId, targetName, minutes) {
+  if (!isAdmin) return;
+  try {
+    const until = Date.now() + minutes * 60 * 1000;
+    await set(ref(db, `moderation/timeouts/${targetId}`), until);
+    showToast(`⏱️ ${targetName} קיבל Timeout של ${minutes} דקות`, 'warning');
+    logAdminAction(`Timeout ${minutes} דק' ל-${targetName}`);
+  } catch(e) { showToast('שגיאה: ' + e.message, 'error'); }
+}
+
+function logAdminAction(action) {
+  const log = document.getElementById('admin-log');
+  const entry = document.createElement('div');
+  entry.style.cssText = 'padding:4px 0;border-bottom:1px solid var(--border);';
+  entry.textContent = `${new Date().toLocaleTimeString('he-IL')} — ${action}`;
+  log.insertBefore(entry, log.firstChild);
+}
+
+// ══════════════════════════════════════════════
+//  PRESENCE / REGISTER USER
+// ══════════════════════════════════════════════
+function registerPresence() {
+  const userNodeRef = ref(db, `users/${userId}`);
+  set(userNodeRef, { name: userName, avatar: userAvatar, online: true, ts: Date.now() });
+  onDisconnect(userNodeRef).update({ online: false });
+}
+
+// ══════════════════════════════════════════════
+//  VOICE CHAT (PeerJS)
+// ══════════════════════════════════════════════
+let peer = null;
+let localStream = null;
+let voiceConnections = {};
+let inVoice = false;
+let selfMuted = false;
+
+const voiceParticipantsEl = document.getElementById('voice-participants');
+const audioContainer = document.getElementById('audio-container');
+const joinBtn = document.getElementById('join-voice-btn');
+const leaveBtn = document.getElementById('leave-voice-btn');
+const voiceConnBar = document.getElementById('voice-connected-bar');
+const vcLeaveBar = document.getElementById('vc-leave-bar');
+
+joinBtn.addEventListener('click', joinVoice);
+leaveBtn.addEventListener('click', leaveVoice);
+vcLeaveBar.addEventListener('click', leaveVoice);
+
+document.getElementById('mute-self-btn').addEventListener('click', () => {
+  if (!localStream) return;
+  selfMuted = !selfMuted;
+  localStream.getAudioTracks().forEach(t => t.enabled = !selfMuted);
+  document.getElementById('mute-self-btn').textContent = selfMuted ? '🔇' : '🎤';
+  showToast(selfMuted ? 'מיקרופון מושתק' : 'מיקרופון פעיל', selfMuted ? 'warning' : 'success');
+});
+
+async function joinVoice() {
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  } catch (e) {
+    showToast('לא ניתן לגשת למיקרופון: ' + e.message, 'error');
+    return;
+  }
+
+  peer = new Peer(undefined, { host: '0.peerjs.com', port: 443, secure: true, path: '/' });
+
+  peer.on('open', peerId => {
+    inVoice = true;
+    const voiceNodeRef = ref(db, `voice/${userId}`);
+    set(voiceNodeRef, { peerId, name: userName, avatar: userAvatar || '', ts: Date.now() });
+    onDisconnect(voiceNodeRef).remove();
+
+    // Connect to existing participants
+    onValue(ref(db, 'voice'), snap => {
+      snap.forEach(child => {
+        const data = child.val();
+        if (child.key !== userId && data.peerId && !voiceConnections[child.key]) {
+          callPeer(data.peerId, child.key);
         }
+      });
+    });
 
-        // האזנה ללחיצת Enter בשדה הטקסט
-        messageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+    joinBtn.style.display = 'none';
+    leaveBtn.style.display = 'block';
+    voiceConnBar.classList.add('visible');
+    addVoiceParticipant(userId, userName, userAvatar, true);
+    showToast('🎤 הצטרפת לשיחה הקולית!', 'success');
+  });
 
-        // פונקציית עזר לעיצוב השעה
-        function formatTime(timestamp) {
-            const date = new Date(timestamp);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        }
+  peer.on('call', call => {
+    call.answer(localStream);
+    call.on('stream', remoteStream => {
+      addAudio(call.peer, remoteStream);
+    });
+    call.on('close', () => removeVoiceParticipant(call.peer));
+    voiceConnections[call.peer] = call;
+  });
 
-        // האזנה להודעות מהשרת בזמן אמת ויצירת הממשק
-        onChildAdded(messagesRef, (data) => {
-            const msg = data.val();
-            const timeString = formatTime(msg.timestamp);
-            
-            // יצירת תמונת פרופיל אוטומטית לפי השם (חינמי ובטוח)
-            const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(msg.username)}&backgroundColor=5865f2`;
+  peer.on('error', e => { showToast('שגיאת PeerJS: ' + e.type, 'error'); });
 
-            // בניית מבנה ההודעה בטכניקה בטוחה מ-XSS
-            const wrapperDiv = document.createElement('div');
-            wrapperDiv.className = 'message-wrapper';
+  // Listen for voice participants
+  onValue(ref(db, 'voice'), snap => {
+    const current = {};
+    snap.forEach(c => { current[c.key] = c.val(); });
+    updateVoiceParticipantsUI(current);
+  });
+}
 
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = 'avatar';
-            const img = document.createElement('img');
-            img.src = avatarUrl;
-            img.alt = msg.username;
-            avatarDiv.appendChild(img);
+function callPeer(peerId, uid) {
+  if (!peer || !localStream) return;
+  const call = peer.call(peerId, localStream);
+  call.on('stream', remoteStream => { addAudio(uid, remoteStream); });
+  call.on('close', () => removeVoiceParticipant(uid));
+  voiceConnections[uid] = call;
+}
 
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
+function addAudio(uid, stream) {
+  let audio = document.getElementById(`audio-${uid}`);
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = `audio-${uid}`;
+    audio.autoplay = true;
+    audioContainer.appendChild(audio);
+  }
+  audio.srcObject = stream;
+}
 
-            const headerDiv = document.createElement('div');
-            headerDiv.className = 'message-header';
-            
-            const usernameSpan = document.createElement('span');
-            usernameSpan.className = 'msg-username';
-            usernameSpan.textContent = msg.username; // textContent כדי למנוע הרצת קוד זדוני
-            
-            const timeSpan = document.createElement('span');
-            timeSpan.className = 'msg-timestamp';
-            timeSpan.textContent = timeString;
+function addVoiceParticipant(uid, name, avatar, isSelf) {
+  const existing = document.getElementById(`vp-${uid}`);
+  if (existing) return;
 
-            headerDiv.appendChild(usernameSpan);
-            headerDiv.appendChild(timeSpan);
+  const el = document.createElement('div');
+  el.className = 'voice-participant';
+  el.id = `vp-${uid}`;
 
-            const textDiv = document.createElement('div');
-            textDiv.className = 'msg-text';
-            textDiv.textContent = msg.text;
+  const av = document.createElement('div');
+  av.className = 'vp-avatar';
+  if (avatar) {
+    const img = document.createElement('img');
+    img.src = avatar;
+    img.onerror = () => { img.remove(); av.textContent = getInitial(name); };
+    av.appendChild(img);
+  } else {
+    av.textContent = getInitial(name);
+  }
 
-            contentDiv.appendChild(headerDiv);
-            contentDiv.appendChild(textDiv);
+  const nameEl = document.createElement('div');
+  nameEl.className = 'vp-name';
+  nameEl.textContent = (isSelf ? '(אתה) ' : '') + name;
 
-            wrapperDiv.appendChild(avatarDiv);
-            wrapperDiv.appendChild(contentDiv);
+  el.appendChild(av);
+  el.appendChild(nameEl);
+  voiceParticipantsEl.appendChild(el);
+}
 
-            chatMessages.appendChild(wrapperDiv);
+function removeVoiceParticipant(uid) {
+  const el = document.getElementById(`vp-${uid}`);
+  if (el) el.remove();
+  const audio = document.getElementById(`audio-${uid}`);
+  if (audio) audio.remove();
+}
 
-            // גלילה אוטומטית חלקה למטה
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        });
-    </script>
+function updateVoiceParticipantsUI(participants) {
+  // Sidebar members list
+  const membersList = document.getElementById('voice-members-list');
+  membersList.innerHTML = '';
+  Object.entries(participants).forEach(([uid, data]) => {
+    const el = document.createElement('div');
+    el.className = 'voice-member-item';
+    el.textContent = (uid === userId ? '(אתה) ' : '') + (data.name || 'אנונימי');
+    membersList.appendChild(el);
+    addVoiceParticipant(uid, data.name, data.avatar, uid === userId);
+  });
+
+  // Remove participants who left
+  document.querySelectorAll('.voice-participant').forEach(el => {
+    const uid = el.id.replace('vp-', '');
+    if (!participants[uid]) removeVoiceParticipant(uid);
+  });
+}
+
+async function leaveVoice() {
+  inVoice = false;
+  // Close all connections
+  Object.values(voiceConnections).forEach(call => { try { call.close(); } catch(e){} });
+  voiceConnections = {};
+  if (peer) { peer.destroy(); peer = null; }
+  if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  await remove(ref(db, `voice/${userId}`));
+  audioContainer.innerHTML = '';
+  voiceParticipantsEl.innerHTML = '';
+  off(ref(db, 'voice'));
+  joinBtn.style.display = 'block';
+  leaveBtn.style.display = 'none';
+  voiceConnBar.classList.remove('visible');
+  showToast('📵 עזבת את השיחה הקולית', 'warning');
+}
+
+// ══════════════════════════════════════════════
+//  CONTEXT MENU
+// ══════════════════════════════════════════════
+const ctxMenu = document.getElementById('context-menu');
+
+document.addEventListener('click', () => { ctxMenu.style.display = 'none'; });
+
+msgsList.addEventListener('contextmenu', e => {
+  const group = e.target.closest('.message-group');
+  if (!group) return;
+  e.preventDefault();
+
+  const msgId = group.dataset.msgId;
+  const authorId = group.dataset.authorId;
+  const authorName = group.dataset.authorName;
+
+  ctxMenu.innerHTML = '';
+
+  if (authorId === userId || isAdmin) {
+    addCtxItem('🗑️ מחק הודעה', () => deleteMessage(msgId), 'danger');
+  }
+
+  if (isAdmin && authorId !== userId) {
+    addCtxItem('🔇 השתק משתמש', () => muteUser(authorId, authorName));
+    addCtxItem('⏱️ Timeout 5 דקות', () => timeoutUser(authorId, authorName, 5));
+    addCtxItem('⏱️ Timeout 10 דקות', () => timeoutUser(authorId, authorName, 10));
+  }
+
+  if (ctxMenu.children.length === 0) return;
+
+  ctxMenu.style.display = 'block';
+  const x = Math.min(e.clientX, window.innerWidth - 180);
+  const y = Math.min(e.clientY, window.innerHeight - ctxMenu.offsetHeight - 10);
+  ctxMenu.style.left = x + 'px';
+  ctxMenu.style.top = y + 'px';
+});
+
+function addCtxItem(text, onClick, className) {
+  const item = document.createElement('div');
+  item.className = `ctx-item${className ? ' ' + className : ''}`;
+  item.textContent = text;
+  item.addEventListener('click', () => { ctxMenu.style.display = 'none'; onClick(); });
+  ctxMenu.appendChild(item);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function init() {
+  updateUserPanel();
+  registerPresence();
+  checkMuteStatus();
+  switchChannel('general', 'text');
+}
+
+init();
+</script>
 </body>
 </html>
