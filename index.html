@@ -3,274 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS v4.0 | TACTICAL COMMAND</title>
+    <title>Anon | Discord Clone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Assistant:wght@200;400;700&display=swap');
-
-        :root {
-            --cyan: #00f2ff;
-            --blue: #0062ff;
-            --dark: #020b16;
-            --neon-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+        /* איפוס בסיסי ועיצוב גופנים */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Assistant', sans-serif; 
+            background-color: #313338; 
+            color: #dbdee1; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
         }
 
-        * { box-sizing: border-box; }
-
-        body {
-            background: #010810;
-            color: #fff;
-            font-family: 'Assistant', sans-serif;
-            margin: 0;
-            height: 100vh;
-            overflow: hidden;
+        /* סרגל שרתים (הכי ימני) */
+        #servers-sidebar {
+            width: 72px;
+            background-color: #1e1f22;
             display: flex;
             flex-direction: column;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 30, 60, 0.5) 0%, #010810 100%),
-                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
-            background-size: 100% 100%, 30px 30px, 30px 30px;
-        }
-
-        /* Scanline Effect */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        header {
-            padding: 20px 50px;
-            border-bottom: 2px solid var(--cyan);
-            background: rgba(0, 10, 20, 0.9);
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+            padding-top: 12px;
+            gap: 10px;
         }
-
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            letter-spacing: 8px;
-            color: var(--cyan);
-            text-shadow: var(--neon-shadow);
-            font-size: 26px;
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #313338;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-weight: bold;
+            color: #dbdee1;
         }
-
-        .hud-info {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            color: var(--cyan);
-            text-align: left;
+        .server-icon:hover {
+            background-color: #5865f2;
+            border-radius: 16px;
+            color: white;
         }
+        .server-icon.active { background-color: #5865f2; border-radius: 16px; }
 
-        main {
-            display: grid;
-            grid-template-columns: 450px 1fr;
-            gap: 25px;
-            padding: 30px;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .panel {
-            background: rgba(0, 20, 40, 0.6);
-            border: 1px solid var(--cyan);
-            border-radius: 5px;
+        /* סרגל ערוצים (פנימי) */
+        #channels-sidebar {
+            width: 240px;
+            background-color: #2b2d31;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(10px);
-            position: relative;
-            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.1);
         }
-
-        .panel-header {
-            background: rgba(0, 242, 255, 0.15);
-            padding: 10px 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            color: var(--cyan);
-            border-bottom: 1px solid var(--cyan);
+        .server-header {
+            padding: 16px;
+            font-weight: 800;
+            border-bottom: 1px solid #1f2023;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            color: white;
+        }
+        .channels-list { padding: 10px; flex: 1; }
+        .channel-item {
+            padding: 8px;
+            margin-bottom: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #949ba4;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .channel-item:hover { background-color: #3f4147; color: #dbdee1; }
+        .channel-item.active { background-color: #404249; color: white; }
+        .hash { font-size: 1.2em; color: #80848e; }
+
+        /* אזור הגדרות משתמש בתחתית סרגל הערוצים */
+        #user-controls {
+            background-color: #232428;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #username-input {
+            width: 100%;
+            padding: 8px;
+            background: #1e1f22;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-family: inherit;
         }
 
-        textarea {
+        /* אזור הצ'אט המרכזי */
+        #main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #313338;
+        }
+        #chat-header {
+            padding: 16px;
+            border-bottom: 1px solid #2b2d31;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* עיצוב הודעה ספציפית */
+        .message-wrapper {
+            display: flex;
+            gap: 16px;
+            line-height: 1.4;
+        }
+        .message-wrapper:hover { background-color: #2e3035; border-radius: 4px; }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #5865f2;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .message-content { flex: 1; }
+        .message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+        .msg-username { font-weight: 600; color: white; font-size: 1rem; }
+        .msg-timestamp { font-size: 0.75rem; color: #949ba4; }
+        .msg-text { color: #dbdee1; word-break: break-word; }
+
+        /* אזור הקלדת הודעה */
+        #input-wrapper {
+            padding: 0 20px 24px 20px;
+        }
+        .input-box {
+            background-color: #383a40;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+        }
+        #message-input {
             flex: 1;
             background: transparent;
             border: none;
-            color: #fff;
-            padding: 20px;
-            font-size: 18px;
+            color: #dbdee1;
+            font-size: 1rem;
             outline: none;
-            resize: none;
-            line-height: 1.6;
+            font-family: inherit;
         }
+        #message-input::placeholder { color: #949ba4; }
 
-        .action-area {
-            padding: 20px;
-            border-top: 1px solid rgba(0, 242, 255, 0.2);
+        /* פס גלילה מעוצב */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #2b2d31; }
+        ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #111214; }
+
+        /* התאמה למובייל */
+        @media (max-width: 768px) {
+            #servers-sidebar, #channels-sidebar { display: none; }
         }
-
-        .stark-btn {
-            width: 100%;
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 15px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.4s;
-        }
-
-        .stark-btn:hover {
-            background: var(--cyan);
-            color: var(--dark);
-            box-shadow: 0 0 40px var(--cyan);
-        }
-
-        #output {
-            padding: 40px;
-            overflow-y: auto;
-            font-size: 20px;
-            line-height: 1.8;
-            color: #d1f7ff;
-            height: 100%;
-        }
-
-        #output strong {
-            color: var(--cyan);
-            text-shadow: 0 0 10px var(--cyan);
-            display: block;
-            margin-top: 20px;
-        }
-
-        /* Loading Animation */
-        #loader {
-            display: none;
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-        }
-
-        .circle-loader {
-            width: 100px; height: 100px;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--cyan);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* HUD Decorations */
-        .corner {
-            position: absolute; width: 15px; height: 15px;
-            border: 2px solid var(--cyan);
-        }
-        .tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
-        .br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
-
     </style>
 </head>
 <body>
 
-<header>
-    <h1>JARVIS | GLOBAL DEFENSE</h1>
-    <div class="hud-info">
-        <div>CORE STATUS: ACTIVE</div>
-        <div id="clock">00:00:00</div>
-    </div>
-</header>
+    <nav id="servers-sidebar">
+        <div class="server-icon active">A</div>
+        <div class="server-icon" style="font-size: 20px;">+</div>
+    </nav>
 
-<main>
-    <div class="panel">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="panel-header"><span>INPUT STREAM</span><span>ID: STARK-77</span></div>
-        <textarea id="inputData" placeholder="הדבק נתוני מודיעין כאן..."></textarea>
-        <div class="action-area">
-            <button class="stark-btn" onclick="analyzeThreat()">EXECUTE TACTICAL SCAN</button>
+    <aside id="channels-sidebar">
+        <div class="server-header">
+            הקבוצה של החבר'ה
         </div>
-    </div>
+        <div class="channels-list">
+            <div class="channel-item active">
+                <span class="hash">#</span> כללי
+            </div>
+            <div class="channel-item">
+                <span class="hash">#</span> גיימינג
+            </div>
+            <div class="channel-item">
+                <span class="hash">#</span> ממים
+            </div>
+        </div>
+        <div id="user-controls">
+            <input type="text" id="username-input" placeholder="בחר כינוי..." value="אנונימי">
+        </div>
+    </aside>
 
-    <div class="panel">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="panel-header"><span>BATTLEFIELD ANALYSIS</span><span>SECURE CONNECTION</span></div>
-        <div id="loader"><div class="circle-loader"></div></div>
-        <div id="output">ממתין להזנת נתונים, אדוני. המערכת סרוקה ומוכנה.</div>
-    </div>
-</main>
+    <main id="main-chat">
+        <header id="chat-header">
+            <span style="color: #949ba4; margin-left: 8px;">#</span> כללי
+        </header>
+        
+        <div id="chat-messages">
+            </div>
 
-<script type="module">
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+        <div id="input-wrapper">
+            <div class="input-box">
+                <input type="text" id="message-input" placeholder="הקלד הודעה לערוץ #כללי..." autocomplete="off">
+            </div>
+        </div>
+    </main>
 
-    // המפתח החדש שביקשת להטמיע
-    const API_KEY = "AIzaSyBkMQHfofh4NaZx2NMg3p0JVhQ3oBOz6iU";
-    const genAI = new GoogleGenerativeAI(API_KEY);
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    window.analyzeThreat = async function() {
-        const input = document.getElementById('inputData').value;
-        const out = document.getElementById('output');
-        const loader = document.getElementById('loader');
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_JNfME-T2fJTlBfInFCBXgnMXLGEapoc",
+            authDomain: "anon-6c5b3.firebaseapp.com",
+            databaseURL: "https://anon-6c5b3-default-rtdb.firebaseio.com",
+            projectId: "anon-6c5b3",
+            storageBucket: "anon-6c5b3.firebasestorage.app",
+            messagingSenderId: "697842373183",
+            appId: "1:697842373183:web:0f8f2259f2af6baba4de8a"
+        };
 
-        if (!input.trim()) return;
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const messagesRef = ref(db, 'messages');
 
-        out.style.opacity = "0.1";
-        loader.style.display = "block";
+        const messageInput = document.getElementById('message-input');
+        const usernameInput = document.getElementById('username-input');
+        const chatMessages = document.getElementById('chat-messages');
 
-        try {
-            // שימוש במודל 1.5-flash עם נתיב יציב (v1)
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // פונקציה לשליחת הודעה
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            const user = usernameInput.value.trim() || "אנונימי";
             
-            const prompt = `אתה JARVIS. בצע ניתוח מודיעיני מעמיק לעוקץ הבא: "${input}". 
-            ענה בעברית מרהיבה, רשמית וטכנולוגית. 
-            חלק ל: **אפיון איום**, **ישויות מזוהות (טלפונים/לינקים)**, **שיטת פעולה**, ו**פרוטוקול תגובה נגדית**.`;
-
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-
-            // Formatting
-            const formattedText = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            loader.style.display = "none";
-            out.style.opacity = "1";
-            
-            // Typewriter effect
-            let i = 0;
-            out.innerHTML = "";
-            const interval = setInterval(() => {
-                out.innerHTML = formattedText.substring(0, i);
-                i += 5;
-                if (i >= formattedText.length) {
-                    out.innerHTML = formattedText;
-                    clearInterval(interval);
-                }
-            }, 10);
-
-        } catch (error) {
-            console.error(error);
-            loader.style.display = "none";
-            out.style.opacity = "1";
-            out.innerHTML = `<span style="color:red;">שגיאת פרוטוקול:</span> אדוני, נראה שיש בעיה בגרסת המודל. <br> נסה ליצור מפתח חדש ב-AI Studio והחלף אותו בקוד.`;
+            if (text !== "") {
+                push(messagesRef, {
+                    username: user,
+                    text: text,
+                    timestamp: Date.now()
+                });
+                messageInput.value = ""; // איפוס תיבת הטקסט
+            }
         }
-    }
 
-    // HUD Clock
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
-</script>
+        // האזנה ללחיצת Enter בשדה הטקסט
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
 
+        // פונקציית עזר לעיצוב השעה
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        // האזנה להודעות מהשרת בזמן אמת ויצירת הממשק
+        onChildAdded(messagesRef, (data) => {
+            const msg = data.val();
+            const timeString = formatTime(msg.timestamp);
+            
+            // יצירת תמונת פרופיל אוטומטית לפי השם (חינמי ובטוח)
+            const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(msg.username)}&backgroundColor=5865f2`;
+
+            // בניית מבנה ההודעה בטכניקה בטוחה מ-XSS
+            const wrapperDiv = document.createElement('div');
+            wrapperDiv.className = 'message-wrapper';
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar';
+            const img = document.createElement('img');
+            img.src = avatarUrl;
+            img.alt = msg.username;
+            avatarDiv.appendChild(img);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'message-header';
+            
+            const usernameSpan = document.createElement('span');
+            usernameSpan.className = 'msg-username';
+            usernameSpan.textContent = msg.username; // textContent כדי למנוע הרצת קוד זדוני
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'msg-timestamp';
+            timeSpan.textContent = timeString;
+
+            headerDiv.appendChild(usernameSpan);
+            headerDiv.appendChild(timeSpan);
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'msg-text';
+            textDiv.textContent = msg.text;
+
+            contentDiv.appendChild(headerDiv);
+            contentDiv.appendChild(textDiv);
+
+            wrapperDiv.appendChild(avatarDiv);
+            wrapperDiv.appendChild(contentDiv);
+
+            chatMessages.appendChild(wrapperDiv);
+
+            // גלילה אוטומטית חלקה למטה
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
 </body>
 </html>
